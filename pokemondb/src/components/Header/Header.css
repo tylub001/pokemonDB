@@ -70,9 +70,12 @@ form {
 
 .home__input {
   border-radius: 20px;
+  border-color: rgb(255, 0, 0);
   padding: 10px;
   display: flex;
   align-self: center;
+  background-color: rgb(255, 255, 251);
+  font-size: 12px;
 }
 
 .home__submit {

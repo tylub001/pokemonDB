@@ -13,8 +13,10 @@
 
 }
 
-@media screen and (max-width: 768px) {
-    .page__content {
-        padding: 20px 16px;
-    }
+@media screen and (max-width: 488px) {
+
+  .page__content {
+    padding: 0;
+  }
 }
+
