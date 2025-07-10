@@ -1,0 +1,207 @@
+.header {
+  display: flex;
+
+display: flex;
+flex-wrap: wrap; 
+  align-items: center;
+  padding: 20px 20px;
+  background: linear-gradient(to right, rgb(255, 2, 2), white);
+    border-bottom: 2px solid grey;
+}
+
+
+.header__logo {
+  font-family: "Bungee";
+  color: white;
+}
+
+.header__logo-arial {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: rgb(252, 252, 252);
+  
+}
+
+.home__intro {
+  display: flex;
+  flex-direction: column;
+  height: 576px;
+  background-image: url("../../images/xxx.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-bottom: 2px solid #ccc;
+
+}
+
+.font-bungee {
+  font-family: "Bungee", sans-serif;
+  font-size: 50px;
+  color: rgb(252, 1, 1);
+  display: inline-block;
+  transform: skewY(-10deg);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.font-arial,
+.font-arial-normal {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: 40px;
+  letter-spacing: -2px;
+  color: rgb(117, 113, 113);
+  display: inline-block;
+}
+
+.home__description {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+
+form {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+   margin-top: 10px;
+    padding-left: 20px
+}
+
+.home__input {
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  align-self: center;
+}
+
+.home__submit {
+  border: none;
+  background: linear-gradient(135deg, #4db9eb, #1b4fb6);
+  border-radius: 30px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  margin-top: 10px;
+
+  align-self: center;
+
+}
+
+.nav__button {
+  border: none;
+  background-color: transparent;
+ 
+}
+
+.home__welcome {
+  padding: 0 20px;
+}
+
+.home__description {
+  padding:0 20px;
+  
+  font-size: 28px;
+margin-top: 20px;
+  font-size: clamp(1.2rem, 4vw, 1.75rem);
+
+  padding: 0 20px;
+}
+
+.header__nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-left: auto;
+  text-decoration: none;
+
+}
+
+.nav__link {
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  color:grey;
+ font-weight: 600;
+  transition: transform 0.2s ease, 0.2s ease;
+  cursor: pointer;
+  
+}
+.nav__link:hover {
+  transform: translateY(-2px);
+
+  
+}
+
+@media screen and (max-width: 660px) {
+   
+    .header{
+      flex-direction: column;
+    }
+
+    .header__nav {
+      margin: 0
+    }
+.font-bungee {
+  font-size: 40px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.font-arial {
+  font-size: 32px;
+  margin-top:25px;
+}
+
+.home__description {
+  text-align: center;
+}
+
+.font-arial-normal {
+  font-size: 30px;
+}
+
+form {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+   margin-top: 0;
+   padding: 0;
+
+}
+
+.home__intro {
+  height: auto;
+  background-position:right;
+  
+
+  
+}
+
+.home__submit {
+  align-self: center;
+  margin-bottom: 30px;
+}
+
+
+input {
+  width: 50%;}
+
+.home__welcome {
+  padding: 0 0;
+  line-height: .9;
+  
+}
+.font-arial {
+  font-size: 20px;
+}
+
+}
+
+
+
+

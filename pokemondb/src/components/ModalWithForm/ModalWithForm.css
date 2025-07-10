@@ -1,0 +1,176 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #0000004d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  line-height: 20px;
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease-in-out, transform 0.5s ease-in-out,
+    visibility 0.3s;
+  z-index: 10;
+}
+
+.modal_opened {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal__title {
+  margin: 0;
+  margin-bottom: 24px;
+}
+
+.modal__close {
+  background-image: url(../../assets/modalclosebtngrey.svg);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+}
+
+.modal__close:hover {
+  opacity: 0.6;
+}
+.modal__content {
+  background-color: #fff;
+  position: relative;
+  padding: 28px 28px 36px;
+  max-width: 496px;
+  box-sizing: border-box;
+  width: 100%;
+  border-radius: 20px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.modal__input {
+  display: block;
+  max-width: 440px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #000;
+  width: 100%;
+  padding-top: 8px;
+}
+
+.modal__radio-btns {
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.modal__label {
+  margin-bottom: 24px;
+}
+
+.modal__legend {
+  margin: 0;
+  margin-bottom: 12px;
+}
+
+.modal__label_type_radio {
+  margin: 0;
+  margin-bottom: 8px;
+  color: #000;
+  opacity: 0.5;
+}
+
+.modal__label_type_radio:has(input[type="radio"]:checked) {
+  opacity: 1;
+}
+
+.modal__submit {
+  background-color: #000;
+  border: none;
+  padding: 8px 16px;
+  color: #fff;
+  border-radius: 4px;
+  width: 124px;
+  margin-top: 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.modal__submit:hover {
+  background-color: #000000;
+
+}
+
+.modal__submit:disabled {
+  opacity: 0.5;
+}
+
+.modal__fieldset {
+  margin: 0;
+}
+
+.modal__radio-input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  margin-right: 8px;
+  position: relative;
+}
+
+.modal__radio-input:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal__action-wrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+  .modal {
+    align-items: flex-end;
+  }
+  .modal__content {
+    border-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .modal__submit {
+    width: 50%;
+  }
+
+  .modal__close {
+    background-image: url(../../assets/closeDark.svg);
+  }
+}

@@ -1,0 +1,153 @@
+.author-footer {
+  display: flex;
+  justify-content: center;
+  background-image: url(../../images/twoteon.jpg);
+  padding: 40px 20px 10px;
+  border-top: 2px solid #ccc;
+    background-size: cover;
+  background-position: center;
+}
+
+.author-footer__content {
+  display: flex;
+  align-items: center;
+  max-width: 1000px;
+  width: 100%;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.footer__image {
+ width: 30vw; /* scales with screen width */
+  height: 30vw; /* maintains square aspect ratio */
+  max-width: 364px;
+  max-height: 364px;
+  background-image: url('../../images/dd.jpg'); /* adjust path */
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  border: 3px solid #bbb;
+  flex-shrink: 0;
+}
+
+.footer__text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.footer__text h4 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.footer__text p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+}
+.footer__container_type_profile {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.footer__nav {
+    display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-left: auto;
+  
+ 
+}
+
+.footer__name {
+  color: #bbb;
+  padding: 10px 0;
+}
+
+.nav__icon {
+  display: flex;
+  gap: 15px
+}
+
+@media screen and (max-width: 760px) {
+.author-footer {
+  display: flex;
+  flex-direction: row;
+  padding: 0 5px;
+}
+
+.footer__image {
+  order:1;
+  margin-top: 10px;
+  justify-self: center;
+}
+
+  .footer__text {
+  text-align: center;
+  margin: 10px;
+  font-size: 12px;
+  }
+
+  .footer__text p {
+  font-size: .7rem;
+  margin-bottom: 12px;
+}
+
+  h4 {
+    margin: 0
+  }
+
+  .author-footer__content {
+    display: block;
+  
+  }
+
+  .footer__name {
+    font-size: 16px;
+  }
+  .footer__year {
+    font-size: 12px;
+  }
+
+  .page__content {
+    padding: 20px 10px;
+  }
+
+  .footer__nav {
+  
+  
+  justify-content: space-between;
+
+  font-size: 16px;
+  
+ 
+}
+.footer__name {
+  order: 2;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0 auto;
+}
+
+.nav__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+ 
+}
+
+.nav__icon {
+  display: flex;
+  gap: 5px
+}
+
+.nav__link {
+  padding: 0;
+}
+
+.footer__container_type_profile {
+  display: block;
+}
+}
+   
