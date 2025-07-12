@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Home from "../Main/Main";
@@ -11,6 +11,10 @@ import RegisterModal from "../RegisterModal/RegisterModal";
 import { fetchPokemonWeaknesses } from "../../utils/api"; // Make sure it's exported!
 import { fetchPokemonStrengths } from "../../utils/api";
 import { getPokemonData } from "../../utils/api";
+import Profile from "../Profile/Profile";
+
+import { useNavigate } from "react-router-dom";
+
 import Footer from "../Footer/Footer";
 
 import "./App.css";
@@ -32,9 +36,52 @@ const App = () => {
   const [strengths, setStrengths] = useState([]);
   const [pokemonData, setPokemonData] = useState(null);
   const [species, setSpecies] = useState("");
-  const [showMoves, setShowMoves] = useState(false);
+
   const [currentIndex, setCurrentIndex] = useState(null);
   const [pokedexList, setPokedexList] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    if (!currentUser) return;
+    const favoritesKey = `${currentUser.email}_favorites`;
+    const savedFavorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+    setFavorites(savedFavorites);
+  }, [currentUser]);
+
+  const handleSavePokemon = (pokemonToSave) => {
+    if (!currentUser || !pokemonToSave?.name) return;
+
+    const key = `${currentUser.email}_favorites`;
+    const existing = JSON.parse(localStorage.getItem(key)) || [];
+
+    const alreadySaved = existing.some((p) => p.name === pokemonToSave.name);
+    if (alreadySaved) return alert("You've already saved this Pokémon!");
+
+    const simplifiedData = {
+      name: pokemonToSave.name,
+      sprite:
+        pokemonToSave.sprites?.front_default ||
+        pokemonToSave.imageNormal,
+      description: pokemonToSave.description || "No description available.",
+      shinySprite: pokemon.sprites?.front_shiny || null,
+    };
+
+    existing.push(simplifiedData);
+    localStorage.setItem(key, JSON.stringify(existing));
+    setFavorites([...existing]); // Refresh state for render
+  };
+
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    // Clear the current user and session
+    setCurrentUser(null);
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/");
+    setActiveModal(""); // Close any open modals
+  };
 
   useEffect(() => {
     const fetchAllPokemonNames = async () => {
@@ -75,9 +122,6 @@ const App = () => {
   }, [pokemon, pokedexList]);
 
   const pokemonName = pokemon?.name || "";
-
-  const handleLoginClick = () => setActiveModal("login");
-  const handleSignUpClick = () => setActiveModal("register");
 
   useEffect(() => {
     getPokemonData(pokemonName).then((data) => {
@@ -138,12 +182,7 @@ const App = () => {
 
   const closeAllModals = () => {
     setActiveModal("");
-    setIsEditProfileModalOpen(false);
-    setIsConfirmModalOpen(false);
-    setCardToDelete(null);
   };
-
-  const toggleMoves = () => setShowMoves((prev) => !prev);
 
   const handleShowEvolution = async () => {
     if (!pokemon) return;
@@ -162,38 +201,71 @@ const App = () => {
     }
   };
 
-  const handleRegister = ({ name, avatar, email, password }) => {
-    auth
-      .register({ name, avatar, email, password })
-      .then((user) => {
-        setCurrentUser(user);
-        return auth.login({ email, password });
-      })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setIsLoggedIn(true);
-        closeAllModals();
-      })
-      .catch((err) => {
-        console.error("Registration failed:", err);
-      });
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (savedUser) {
+      setCurrentUser(savedUser);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // 🔵 Sync current user to localStorage when it changes
+  useEffect(() => {
+    if (currentUser) {
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      setIsLoggedIn(true);
+    } else {
+      localStorage.removeItem("currentUser");
+      setIsLoggedIn(false);
+    }
+  }, [currentUser]);
+
+  // 🔐 Login handler
+  const handleLogin = ({ email, password }) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const match = users.find(
+      (user) =>
+        user.email.trim().toLowerCase() === normalizedEmail &&
+        user.password === password
+    );
+    if (match) {
+      setCurrentUser(match);
+      console.log("Login successful!");
+      navigate("/profile");
+      closeAllModals(); // if this exists
+    } else {
+      alert("Incorrect email or password.");
+    }
   };
 
-  const handleLogin = ({ email, password }) => {
-    auth
-      .login({ email, password })
-      .then((data) => {
-        localStorage.setItem("jwt", data.token);
-        setIsLoggedIn(true);
-        fetchUserProfile(data.token);
-        setPasswordError("");
-        closeAllModals();
-      })
-      .catch((err) => {
-        console.error("Login failed:", err);
-        setPasswordError("Incorrect password");
-      });
+  // 📝 Register handler
+  const handleRegister = ({ name, email, password }) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const newUser = { name, email: normalizedEmail, password };
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const duplicate = users.find(
+      (user) => user.email.trim().toLowerCase() === normalizedEmail
+    );
+
+    if (duplicate) {
+      alert("A user with this email already exists.");
+      return;
+    }
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    setCurrentUser(newUser);
+    console.log("Registration successful!");
+    navigate("/profile");
+    closeAllModals(); // if this exists
   };
+
+  // ⛳ Example modal triggers
+  const handleLoginClick = () => setActiveModal("login");
+  const handleSignUpClick = () => setActiveModal("register");
 
   return (
     <div className="page">
@@ -201,6 +273,9 @@ const App = () => {
         <Header
           onLoginClick={handleLoginClick}
           onSignupClick={handleSignUpClick}
+          onSignOut={handleSignOut}
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
         />
         <main>
           <Routes>
@@ -215,8 +290,6 @@ const App = () => {
                   showShiny={showShiny}
                   setShowShiny={setShowShiny}
                   handleSearch={handleSearch}
-                  showMoves={showMoves}
-                  setShowMoves={setShowMoves}
                   evolutionChain={evolutionChain}
                   showEvolution={showEvolution}
                   handleShowEvolution={handleShowEvolution}
@@ -226,23 +299,36 @@ const App = () => {
                   strengths={strengths}
                   pokemonData={pokemonData}
                   species={species}
-                  toggleMoves={toggleMoves}
                   currentIndex={currentIndex}
                   handleNext={handleNext}
                   handlePrev={handlePrev}
                   pokedexList={pokedexList}
+                  handleSave={handleSavePokemon}
+                  currentUser={currentUser}
                 />
               }
             />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/login" element={<Login />} />
+
+            <Route
+              path="/profile"
+              element={
+                <Profile
+                  currentUser={currentUser}
+                  isLoggedIn={isLoggedIn}
+                  favorites={favorites}
+                  setFavorites={setFavorites}
+                />
+              }
+            />
           </Routes>
+
           <RegisterModal
             isOpen={activeModal === "register"}
             onClose={closeAllModals}
             onRegister={handleRegister}
             onLoginClick={handleLoginClick}
           />
+
           <LoginModal
             isOpen={activeModal === "login"}
             onClose={closeAllModals}
@@ -252,6 +338,7 @@ const App = () => {
             onSignupClick={handleSignUpClick}
           />
         </main>
+
         <Footer />
       </div>
     </div>

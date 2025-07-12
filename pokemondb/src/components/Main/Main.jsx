@@ -23,6 +23,8 @@ const Home = ({
   handleNext,
   handlePrev,
   pokedexList,
+  handleSave,
+  currentUser,
 }) => {
   return (
     <main className="home">
@@ -30,8 +32,8 @@ const Home = ({
         <h1 className="home__welcome">
           <span className="font-arial-normal">Welcome to </span>
           <div className="home__container-main">
-          <span className="font-bungee">POKÉMON</span>
-          <span className="font-arial">DB</span>
+            <span className="font-bungee">POKÉMON</span>
+            <span className="font-arial">DB</span>
           </div>
         </h1>
         <p className="home__description">
@@ -58,22 +60,26 @@ const Home = ({
             <div className="card">
               <div className="card__heading">
                 <h2 className="pokemon__name">{pokemon.name}</h2>
+                <button
+                  className="shiny-toggle"
+                  type="button"
+                  onClick={() => setShowShiny(!showShiny)}
+                >
+                  {showShiny} ✨
+                </button>
                 <p className="pokemon__species">{species}</p>
                 <p className="pokemon__type">
-                  Type: {pokemon.types.join(", ")}
+                  Type: {pokemon.types?.join(", ") || "Unknown"}
                 </p>
                 <img
                   className="pokemon__image"
                   src={showShiny ? pokemon.imageShiny : pokemon.imageNormal}
                   alt={pokemon.name}
                 />
-                {pokemon && (
-                  <button
-                    className="pokemon__shiny-btn"
-                    type="button"
-                    onClick={() => setShowShiny(!showShiny)}
-                  >
-                    {showShiny ? "Show Regular" : "Show Shiny"}
+               
+                {currentUser && pokemon && (
+                  <button className="pokemon__save-btn" onClick={() => handleSave(pokemon)}>
+                    Save Pokémon
                   </button>
                 )}
                 <p className="pokemon-description">{pokemon.description}</p>
@@ -90,7 +96,9 @@ const Home = ({
                       <h3>Weaknesses</h3>
                       <ul className="weakness">
                         {weaknesses.map(({ type }) => (
-                          <li className="strenght-list"key={type}>{type}</li>
+                          <li className="strenght-list" key={type}>
+                            {type}
+                          </li>
                         ))}
                       </ul>
                     </div>
@@ -100,7 +108,9 @@ const Home = ({
                       <h3>Strengths</h3>
                       <ul className="strength">
                         {strengths.map((type) => (
-                          <li className="strenght-list" key={type}>{type}</li>
+                          <li className="strenght-list" key={type}>
+                            {type}
+                          </li>
                         ))}
                       </ul>
                     </div>
@@ -121,28 +131,37 @@ const Home = ({
                 {showEvolution && (
                   <div className="evolution-chain">
                     <div className="evolution-images">
-                      {evolutionChain.map((stage, index) => (
-                        <div
-                          key={index}
-                          className="evolution-stage"
-                          onClick={() => handleSearch(stage.name)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <img src={stage.image} alt={stage.name} />
-                          <p>{stage.name}</p>
-                          <p className="evolution-condition">
-                            {stage.condition && stage.condition !== "—"
-                              ? stage.condition
-                              : "Does not evolve"}
-                          </p>
-                        </div>
-                      ))}
+                      {evolutionChain.map((stage, index) => {
+                        if (!stage || !stage.name) {
+                          console.warn(
+                            "Skipping corrupted evolution entry:",
+                            stage
+                          );
+                          return null;
+                        }
+
+                        return (
+                          <div
+                            key={index}
+                            className="evolution-stage"
+                            onClick={() => handleSearch(stage.name)}
+                            style={{ cursor: "pointer" }}
+                          >
+                            <img src={stage.image} alt={stage.name} />
+                            <p>{stage.name}</p>
+                            <p className="evolution-condition">
+                              {stage.condition && stage.condition !== "—"
+                                ? stage.condition
+                                : "Does not evolve"}
+                            </p>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="card__image">
                 <div className="pokedex-nav">
                   <button
                     className="prev-btn"
@@ -162,7 +181,7 @@ const Home = ({
                 </div>
               </div>
             </div>
-          </div>
+       
         )}
       </section>
     </main>

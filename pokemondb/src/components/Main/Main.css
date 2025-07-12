@@ -45,6 +45,7 @@ ul {
   margin: 0;
   background: linear-gradient(to right, #bdbdbd, #f3f3f3);
   border: 10px solid black;
+  position: relative;
 }
 
 .stat-line {
@@ -194,7 +195,7 @@ padding: 5px 10px;
   -webkit-text-stroke: 1px rgb(88, 86, 86);
 }
 
-.pokemon__shiny-btn,
+.pokemon__save-btn,
 .pokemon__evo-btn {
   border: none;
   border-radius: 30px;
@@ -210,7 +211,28 @@ padding: 5px 10px;
   cursor: pointer;
 }
 
-.pokemon__shiny-btn {
+
+
+.shiny-toggle {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: gold;
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s ease;
+}
+
+
+.shiny-toggle:hover {
+  background-color: #ffec99; /* soft pastel yellow */
+}
+
+.pokemon__save-btn {
   background: linear-gradient(135deg, #4db9eb, #1b4fb6);
   margin-top: 10px;
 }
@@ -220,18 +242,24 @@ padding: 5px 10px;
   margin: 10px 0 20px;
 }
 
+.pokemon__save-btn:hover,
 .pokemon__ability-btn:hover,
-.pokemon__shiny-btn:hover,
 .pokemon__evo-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   background: linear-gradient(135deg, #1b4fb6, #0a2a66);
 }
 
+
+
 @media screen and (max-width: 660px) {
   .stat-line {
     font-size: 16px;
     padding: 0 10px;
+  }
+
+  .shiny-toggle {
+     font-size: 1rem;
   }
   h3 {
     font-size: 20px;
@@ -263,7 +291,7 @@ padding: 5px 10px;
 
   
 
-   .card {
+.card {
     padding: 0
    }
 

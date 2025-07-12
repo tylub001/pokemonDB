@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
 
-const Header = ({ onLoginClick, onSignupClick }) => {
+const Header = ({ onLoginClick, onSignupClick, onSignOut, isLoggedIn, currentUser }) => {
   return (
-    <header className="header">
+    <header className="header header__type_profile">
      <div className="logo__conttainer">
       <span className="header__logo">POKÉMON</span>
       <span className="header__logo-arial">DB</span>
@@ -12,9 +12,25 @@ const Header = ({ onLoginClick, onSignupClick }) => {
         <Link to="/" className="nav__link">
           Home
         </Link>
-        <button className="nav__link" onClick={onLoginClick}>
-          Login
-        </button>
+
+      {isLoggedIn ? (
+          <>
+            <Link to="/profile" className="nav__link">
+            <span className="header__my-favorites">MY</span>
+             <span className="header__favorites">POKÉMON</span>
+      
+            </Link>
+            <button className="nav__link" onClick={onSignOut}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="nav__link" onClick={onLoginClick}>
+              Login
+            </button>
+          </>
+        )}
       </nav>
     </header>
   );

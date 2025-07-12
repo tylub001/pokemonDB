@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import "./LoginModal.css";
 
-function LoginModal({
+export default function LoginModal({
   isOpen,
   onClose,
   onLogin,
@@ -13,41 +13,44 @@ function LoginModal({
   const [values, setValues] = useState({ email: "", password: "" });
   const [isValid, setIsValid] = useState(false);
   const [errors, setErrors] = useState({});
- 
 
   useEffect(() => {
-  if (isOpen) {
-    setValues({
-      email: "",
-      password: "",
-    });
-    setErrors({});
-    setIsValid(false);
-  }
-}, [isOpen]);
+    if (isOpen) {
+      setValues({ email: "", password: "" });
+      setErrors({});
+      setIsValid(false);
+      setPasswordError("");
+    }
+  }, [isOpen, setPasswordError]);
 
   const handleChange = (e) => {
+    const { name, value, validationMessage } = e.target;
+    setValues((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: validationMessage }));
     setPasswordError("");
-    const { name, value, validationMessage, validity } = e.target;
 
-    const newValues = { ...values, [name]: value };
-    setValues(newValues);
-
-     if (name === "email") {
-    setErrors((prev) => ({ ...prev, email: validationMessage }));
-  }
-
-    const isFormValid =
-      newValues.email.trim() !== "" && newValues.password.trim() !== "";
-    setIsValid(isFormValid);
+    const formFilled =
+      values.email.trim() !== "" && values.password.trim() !== "";
+    setIsValid(formFilled);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onLogin(values);
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    const match = users.find(
+      (user) =>
+        user.email === values.email && user.password === values.password
+    );
+
+    if (match) {
+      onLogin(match);
+    } else {
+      setPasswordError("Incorrect email or password");
+    }
   };
 
-  return (
+   return (
     <ModalWithForm
       title="Log In"
       name="login"
@@ -74,7 +77,7 @@ function LoginModal({
           required
           autoComplete="username"
         />
-         <span className="modal__error">{errors.email}</span>
+        <span className="modal__error">{errors.email}</span>
       </label>
 
       <label
@@ -89,11 +92,9 @@ function LoginModal({
           value={values.password}
           onChange={handleChange}
           required
-           autoComplete="current-password"
+          autoComplete="current-password"
         />
       </label>
     </ModalWithForm>
   );
 }
-
-export default LoginModal;

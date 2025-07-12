@@ -1,14 +1,13 @@
 .header {
   display: flex;
 
-display: flex;
-flex-wrap: wrap; 
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   padding: 20px 20px;
   background: linear-gradient(to right, rgb(255, 2, 2), white);
-    border-bottom: 2px solid grey;
+  border-bottom: 2px solid grey;
 }
-
 
 .header__logo {
   font-family: "Bungee";
@@ -20,7 +19,15 @@ flex-wrap: wrap;
   font-weight: 800;
   font-size: 20px;
   color: rgb(252, 252, 252);
-  
+}
+
+@keyframes slideRight {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 100% center;
+  }
 }
 
 .home__intro {
@@ -28,11 +35,13 @@ flex-wrap: wrap;
   flex-direction: column;
   height: 576px;
   background-image: url("../../images/xxx.jpg");
-  background-size: cover;
-  background-position: center;
+  background-size: 150%; /* Extra width gives room to slide */
   background-repeat: no-repeat;
+  background-position: 0% center;
   border-bottom: 2px solid #ccc;
 
+  /* ✨ Smooth infinite motion */
+  animation: slideRight 60s linear infinite;
 }
 
 .font-bungee {
@@ -59,13 +68,12 @@ flex-wrap: wrap;
   font-weight: 600;
 }
 
-
 form {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-   margin-top: 10px;
-    padding-left: 20px
+  margin-top: 10px;
+  padding-left: 20px;
 }
 
 .home__input {
@@ -88,18 +96,23 @@ form {
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   margin-top: 10px;
-
   align-self: center;
 
+  /* ✨ Smooth transition */
+  transition: 0.4s ease, box-shadow 0.4s ease;
+}
+
+.home__submit:hover {
+  background: linear-gradient(135deg, #6dd5fa, #4db9eb); /* lighter blue gradient */
+  box-shadow: 0 6px 16px rgba(77, 185, 235, 0.4);
+ 
 }
 
 .nav__button {
   border: none;
   background-color: transparent;
- 
 }
 
 .home__welcome {
@@ -107,10 +120,10 @@ form {
 }
 
 .home__description {
-  padding:0 20px;
-  
+  padding: 0 20px;
+
   font-size: 28px;
-margin-top: 20px;
+  margin-top: 20px;
   font-size: clamp(1.2rem, 4vw, 1.75rem);
 
   padding: 0 20px;
@@ -122,89 +135,153 @@ margin-top: 20px;
   align-items: center;
   margin-left: auto;
   text-decoration: none;
-
 }
 
 .nav__link {
   text-decoration: none;
   border: none;
   background-color: transparent;
-  color:grey;
- font-weight: 600;
+  color: grey;
+  font-weight: 600;
   transition: transform 0.2s ease, 0.2s ease;
   cursor: pointer;
-  
 }
 .nav__link:hover {
   transform: translateY(-2px);
+}
 
-  
+.header__my-favorites {
+  font-family: Arial, Helvetica, sans-serif;
+color: red;
+  font-weight: 800;
+  font-size: 13px;
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header__favorites {
+  font-family: 'Bungee';
+  color: red;
+  font-size: 15px;
+  letter-spacing: -.6px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+   display: inline-block;
+  transform: skewY(-10deg);
 }
 
 @media screen and (max-width: 660px) {
-   
-    .header{
-      flex-direction: column;
-    }
+  .header {
+    flex-direction: column;
+    padding: 10px;
+  }
 
-    .header__nav {
-      margin: 0
-    }
-.font-bungee {
-  font-size: 40px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  .header__nav {
+  gap: 8px;
+  margin: 6px 0;
 }
 
-.font-arial {
-  font-size: 32px;
-  margin-top:25px;
+  .header__nav {
+    margin: 0;
+  }
+  .font-bungee {
+    font-size: 40px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .font-arial {
+    font-size: 32px;
+    margin-top: 25px;
+  }
+
+  .home__description {
+    text-align: center;
+  }
+
+  .font-arial-normal {
+    font-size: 30px;
+  }
+
+  form {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .home__intro {
+    height: auto;
+    background-position: right;
+  }
+
+  .home__submit {
+    align-self: center;
+    margin-bottom: 30px;
+  }
+
+  input {
+    width: 50%;
+  }
+
+  .home__welcome {
+    padding: 0 0;
+    line-height: 0.9;
+  }
+  .font-arial {
+    font-size: 20px;
+  }
 }
 
-.home__description {
-  text-align: center;
+@media screen and (max-width: 568px) {
+  .home__intro {
+    animation: none;
+    background-size: cover;
+    background-position: center; /* Reset position if needed */
+    background-position-x: 70%;
+  }
+
+  
+  
 }
 
-.font-arial-normal {
-  font-size: 30px;
+@media screen and (max-width: 423px) {
+
+.header__my-favorites {
+ 
+    color: #fff;
+    
+
+  }
+
+  .header__favorites {
+    color: white;
+  }
+
+
+.header__nav {
+  gap: 8px;
+  margin: 6px 0;
 }
 
-form {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-   margin-top: 0;
-   padding: 0;
-
+button.nav__link {
+  font-size: 16px;
+}
+a.nav__link {
+  font-size: 16px;
 }
 
-.home__intro {
-  height: auto;
-  background-position:right;
+.header {
+  padding: 0;
+}
+
+p.home__description {
+  font-size: 16px;
+  color: rgb(66, 66, 66);
+  background-color: #cccccc7c;
+  margin: 10px 0;
+ 
   
 
-  
-}
-
-.home__submit {
-  align-self: center;
-  margin-bottom: 30px;
 }
 
 
-input {
-  width: 50%;}
-
-.home__welcome {
-  padding: 0 0;
-  line-height: .9;
-  
 }
-.font-arial {
-  font-size: 20px;
-}
-
-}
-
-
-
-
