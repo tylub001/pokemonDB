@@ -6,6 +6,7 @@
   border-top: 2px solid #ccc;
     background-size: cover;
   background-position: center;
+  position: relative;
 }
 
 .author-footer__content {
@@ -15,6 +16,7 @@
   width: 100%;
   justify-content: space-between;
   gap: 40px;
+   margin-top: 50px;
 }
 
 .footer__image {
@@ -22,12 +24,13 @@
   height: 30vw; /* maintains square aspect ratio */
   max-width: 364px;
   max-height: 364px;
-  background-image: url('../../images/dd.jpg'); /* adjust path */
+  background-image: url('../../images/footerpic.jpg'); /* adjust path */
   background-size: cover;
   background-position: center;
   border-radius: 50%;
   border: 3px solid #bbb;
-  flex-shrink: 0;
+ 
+
 }
 
 .footer__text {
@@ -63,11 +66,15 @@
 .footer__name {
   color: #bbb;
   padding: 10px 0;
+  font-style: italic;
 }
 
 .nav__icon {
   display: flex;
-  gap: 15px
+  gap: 15px;
+  position: absolute;
+  right: 10px;
+  bottom: 1px;
 }
 
 @media screen and (max-width: 760px) {

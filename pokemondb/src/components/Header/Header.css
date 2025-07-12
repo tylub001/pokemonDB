@@ -175,7 +175,7 @@ color: red;
   }
 
   .header__nav {
-  gap: 8px;
+  gap: 20px;
   margin: 6px 0;
 }
 
@@ -229,15 +229,30 @@ color: red;
   .font-arial {
     font-size: 20px;
   }
+
+  .header__favorites {
+    color: rgb(236, 231, 231);
+  }
+.header__logo-arial {
+color: black;
+opacity: .8;
+
+
+}
+
+.header__logo {
+color: black;
+opacity: .8;
+}
+
+.header__logo {
+  color: rgb(8, 8, 8);
+}
+
 }
 
 @media screen and (max-width: 568px) {
-  .home__intro {
-    animation: none;
-    background-size: cover;
-    background-position: center; /* Reset position if needed */
-    background-position-x: 70%;
-  }
+ 
 
   
   
@@ -276,7 +291,7 @@ a.nav__link {
 p.home__description {
   font-size: 16px;
   color: rgb(66, 66, 66);
-  background-color: #cccccc7c;
+
   margin: 10px 0;
  
   

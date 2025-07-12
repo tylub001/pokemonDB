@@ -32,7 +32,7 @@ const Profile = ({ currentUser, favorites, setFavorites }) => {
 
   return (
     <div className="profile">
-      <h1 className="profile__name">{currentUser?.name || "Trainer"},</h1>
+      <h1 className="profile__name">Hello, {currentUser?.name || "Trainer"}!</h1>
       <p className="profile__description">Welcome to your Pokédex portal</p>
 
       <section>
@@ -67,7 +67,7 @@ const Profile = ({ currentUser, favorites, setFavorites }) => {
 
           
                     <p className="card__description">
-                      <strong>Description:</strong> {poke.description}
+                       {poke.description}
                     </p>
                     <button
                       className="release-button"
@@ -75,6 +75,7 @@ const Profile = ({ currentUser, favorites, setFavorites }) => {
                     >
                       Release
                     </button>
+                    
                   </li>
                 );
               })}
@@ -85,6 +86,7 @@ const Profile = ({ currentUser, favorites, setFavorites }) => {
             >
               Release all Pokémon
             </button>
+            <p className="profile__warning">Clicking this will release ALL pokemon back into the wild!</p>
           </div>
         )}
       </section>

@@ -38,7 +38,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src={facebookIcon} alt="GitHub" className="nav__icon" />
+              <img src={facebookIcon} alt="GitHub" className="nav__icon-facebook" />
             </a>
 
             <a
@@ -47,7 +47,7 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src={githubIcon} alt="Facebook" className="nav__icon" />
+              <img src={githubIcon} alt="Facebook" className="nav__icon-github" />
             </a>
             </div>
           </nav>
