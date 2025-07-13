@@ -1,4 +1,7 @@
 import "./main.css";
+import notFoundIcon from "../../images/not-found.svg";
+import { useRef, useEffect } from "react";
+
 
 const Home = ({
   query,
@@ -25,7 +28,32 @@ const Home = ({
   pokedexList,
   handleSave,
   currentUser,
+  lastSearch,
+  setSearchTerm,
+  setSuggestions,
+  handleInputChange,
+  searchTerm,
+  suggestions,
 }) => {
+
+  const suggestionRef = useRef(null);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      suggestionRef.current &&
+      !suggestionRef.current.contains(event.target)
+    ) {
+      setSuggestions([]); // ✅ close the list
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, [setSuggestions]);
+
   return (
     <main className="home">
       <div className="home__intro">
@@ -40,21 +68,62 @@ const Home = ({
           Explore your favorite Pokémon with ease!
         </p>
 
-        <form onSubmit={handleSearch}>
-          <input
-            className="home__input"
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSearch(searchTerm); // ✅ manually trigger search
+          }}
+        >
+          <input className="home__input"
             type="text"
-            placeholder="Search Pokémon..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={searchTerm}
+            onChange={(e) => handleInputChange(e.target.value)}
+            placeholder="Search Pokémon"
           />
-          <button className="home__submit" type="submit">
+
+ <button className="home__submit" type="submit">
             Search
           </button>
+
+          {suggestions.length > 0 && (
+            <ul className="suggestion-list" ref={suggestionRef}>
+              {suggestions.map((name) => (
+                <li className="suggestion-item"
+                  key={name}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // ✅ prevents form submit
+                    setSearchTerm(name);
+                    setSuggestions([]);
+                    handleSearch(name);
+                  }}
+                >
+                  {name}
+                </li>
+              ))}
+            </ul>
+          )}
+         
         </form>
       </div>
       <section className="home__results">
-        {loading && <p>Loading...</p>}
+        {loading && (
+          <div className="loading__wrapper">
+            <div className="loading__animation"></div>
+            <p>Searching for Pokémon...</p>
+          </div>
+        )}
+
+        {!loading && !pokemon && lastSearch.trim() !== "" && (
+          <div className="not-found__wrapper">
+            <img
+              src={notFoundIcon} // adjust path if needed
+              alt="Pokémon not found"
+              className="not-found__icon"
+            />
+            <p className="not-found__text">Pokémon not found</p>
+          </div>
+        )}
+
         {!loading && pokemon && (
           <div className="card__wrapper">
             <div className="card">
@@ -71,14 +140,42 @@ const Home = ({
                 <p className="pokemon__type">
                   Type: {pokemon.types?.join(", ") || "Unknown"}
                 </p>
-                <img
-                  className="pokemon__image"
-                  src={showShiny ? pokemon.imageShiny : pokemon.imageNormal}
-                  alt={pokemon.name}
-                />
-               
+
+                <div
+                  className={`pokemon-image-wrapper ${
+                    pokemon.isLegendary || pokemon.isMythical
+                      ? "special-image"
+                      : "regular-image"
+                  }`}
+                >
+                  {(pokemon.isLegendary || pokemon.isMythical) && (
+                    <div className="twinkle-layer">
+                      {[...Array(20)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="star"
+                          style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 5}s`,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  <img
+                    className="pokemon__image"
+                    src={showShiny ? pokemon.imageShiny : pokemon.imageNormal}
+                    alt={pokemon.name}
+                  />
+                </div>
+
                 {currentUser && pokemon && (
-                  <button className="pokemon__save-btn" onClick={() => handleSave(pokemon)}>
+                  <button
+                    className="pokemon__save-btn"
+                    onClick={() => handleSave(pokemon)}
+                  >
                     Save Pokémon
                   </button>
                 )}
@@ -162,26 +259,25 @@ const Home = ({
                 )}
               </div>
 
-                <div className="pokedex-nav">
-                  <button
-                    className="prev-btn"
-                    onClick={handlePrev}
-                    disabled={currentIndex <= 0}
-                  >
-                    ⬅️ Previous
-                  </button>
-                  <span className="current-name">{pokemon?.name}</span>
-                  <button
-                    className="next-btn"
-                    onClick={handleNext}
-                    disabled={currentIndex >= pokedexList.length - 1}
-                  >
-                    Next ➡️
-                  </button>
-                </div>
+              <div className="pokedex-nav">
+                <button
+                  className="prev-btn"
+                  onClick={handlePrev}
+                  disabled={currentIndex <= 0}
+                >
+                  ⬅️ Previous
+                </button>
+                <span className="current-name">{pokemon?.name}</span>
+                <button
+                  className="next-btn"
+                  onClick={handleNext}
+                  disabled={currentIndex >= pokedexList.length - 1}
+                >
+                  Next ➡️
+                </button>
               </div>
             </div>
-       
+          </div>
         )}
       </section>
     </main>

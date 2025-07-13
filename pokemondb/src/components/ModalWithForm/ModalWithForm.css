@@ -91,6 +91,9 @@
   margin: 0;
   margin-bottom: 12px;
 }
+form {
+  padding: 0;
+}
 
 .modal__label_type_radio {
   margin: 0;

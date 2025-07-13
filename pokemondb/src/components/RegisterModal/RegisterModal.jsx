@@ -7,6 +7,8 @@ export default function RegisterModal({
   onClose,
   onRegister,
   onLoginClick,
+  setCurrentUser,
+  setIsLoggedIn,
 }) {
   const [values, setValues] = useState({ email: "", password: "", name: "" });
   const [errors, setErrors] = useState({});
@@ -32,7 +34,7 @@ export default function RegisterModal({
       alert("Please fill out all fields.");
       return;
     }
- const newUser = {
+    const newUser = {
       name: values.name,
       email: values.email,
       password: values.password,
@@ -50,6 +52,9 @@ export default function RegisterModal({
     localStorage.setItem("users", JSON.stringify(existingUsers));
     localStorage.setItem("user", JSON.stringify(newUser));
 
+    setCurrentUser(newUser);
+    setIsLoggedIn(true);
+
     onRegister(newUser);
     onClose();
     navigate("/profile");
@@ -66,8 +71,7 @@ export default function RegisterModal({
         <button type="button" className="modal__link" onClick={onLoginClick}>
           or Log in
         </button>
-
-         }
+      }
       isValid={true}
     >
       <label className="modal__label">
@@ -87,7 +91,7 @@ export default function RegisterModal({
         Password*
         <input
           type="password"
-            name="password"
+          name="password"
           className="modal__input"
           placeholder="Password"
           required

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 
 const Header = ({ onLoginClick, onSignupClick, onSignOut, isLoggedIn, currentUser }) => {
+  console.log("Header received isLoggedIn:", isLoggedIn);
+console.log("Header received currentUser:", currentUser);
   return (
     <header className="header header__type_profile">
      <div className="logo__conttainer">
@@ -13,7 +15,7 @@ const Header = ({ onLoginClick, onSignupClick, onSignOut, isLoggedIn, currentUse
           Home
         </Link>
 
-      {isLoggedIn ? (
+      {isLoggedIn && currentUser ? (
           <>
             <Link to="/profile" className="nav__link">
             <span className="header__my-favorites">MY</span>

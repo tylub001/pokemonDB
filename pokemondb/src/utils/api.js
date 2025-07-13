@@ -22,37 +22,50 @@ const normalizeSpecies = (name) => {
 
 export const fetchPokemonByName = async (name) => {
   try {
-    const normalizedName = normalizeName(name);         // Used for Pokémon data (moves, stats, images)
-    const normalizedSpecies = normalizeSpecies(name);   // Used for species info (genus, flavor text)
+    const normalizedName = normalizeName(name); // Used for Pokémon data (moves, stats, images)
+    const normalizedSpecies = normalizeSpecies(name); // Used for species info (genus, flavor text)
 
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedName}`);
+    const res = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+    );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
 
-    const speciesRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`);
+    const speciesRes = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`
+    );
     if (!speciesRes.ok) throw new Error("Species data not found");
     const speciesData = await speciesRes.json();
 
     const englishEntry = Array.isArray(speciesData.flavor_text_entries)
-      ? speciesData.flavor_text_entries.find((entry) => entry.language.name === "en")
+      ? speciesData.flavor_text_entries.find(
+          (entry) => entry.language.name === "en"
+        )
       : null;
 
     const description = englishEntry
       ? englishEntry.flavor_text.replace(/\f/g, " ")
       : "No description available.";
 
+    const isLegendary = speciesData.is_legendary;
+    const isMythical = speciesData.is_mythical;
+
     return {
       name: data.name,
       imageNormal: data.sprites.other["official-artwork"].front_default,
       imageShiny: data.sprites.other["official-artwork"].front_shiny,
       types: data.types.map((typeObj) => typeObj.type.name),
-     moves: data.moves
-  .filter((entry) =>
-    entry.version_group_details.some((detail) => detail.move_learn_method.name === "level-up")
-  )
-  .map((entry) => entry.move.name),
+      moves: data.moves
+        .filter((entry) =>
+          entry.version_group_details.some(
+            (detail) => detail.move_learn_method.name === "level-up"
+          )
+        )
+        .map((entry) => entry.move.name),
       abilities: data.abilities.map((abilityObj) => abilityObj.ability.name),
       description,
+      isLegendary, // ✅ now available
+      isMythical,
     };
   } catch (error) {
     console.error("Failed to fetch Pokémon:", error);
@@ -144,7 +157,9 @@ export const fetchPokemonWeaknesses = async (name) => {
     const normalizedName = normalizeName(name);
 
     // Get type data from Pokémon endpoint
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedName}`);
+    const res = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+    );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
 
@@ -184,7 +199,7 @@ export const fetchPokemonWeaknesses = async (name) => {
       .filter(([type, count]) => !halfDamage.has(type) && !noDamage.has(type))
       .map(([type, count]) => ({
         type,
-        multiplier: count === 2 ? '4x' : '2x',
+        multiplier: count === 2 ? "4x" : "2x",
       }));
 
     return finalWeaknesses;
@@ -199,7 +214,9 @@ export const fetchPokemonStrengths = async (name) => {
     const normalizedName = normalizeName(name);
 
     // Fetch the Pokémon's type info
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${normalizedName}`);
+    const res = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+    );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
 
@@ -226,11 +243,13 @@ export const fetchPokemonStrengths = async (name) => {
 
 export const getPokemonData = async (pokemonName) => {
   try {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
-    if (!res.ok) throw new Error('Pokémon not found');
+    const res = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`
+    );
+    if (!res.ok) throw new Error("Pokémon not found");
     return await res.json();
   } catch (err) {
-    console.error('Error fetching Pokémon data:', err);
+    console.error("Error fetching Pokémon data:", err);
     return null;
   }
 };
@@ -242,7 +261,8 @@ export const getPokemonSpecies = async (name) => {
     const res = await fetch(
       `https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`
     );
-    if (!res.ok) throw new Error(`Species fetch failed for ${normalizedSpecies}`);
+    if (!res.ok)
+      throw new Error(`Species fetch failed for ${normalizedSpecies}`);
 
     const data = await res.json();
 
@@ -258,4 +278,3 @@ export const getPokemonSpecies = async (name) => {
     return "Unknown species";
   }
 };
-

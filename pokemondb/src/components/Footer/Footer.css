@@ -135,7 +135,8 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 0 auto;
-  padding-bottom: 0
+  padding-bottom: 0;
+  font-size: 12px;
 }
 
 .nav__text {
@@ -148,6 +149,7 @@
 .nav__icon {
   display: flex;
   gap: 5px
+  
 }
 
 .nav__link {
@@ -157,5 +159,7 @@
 .footer__container_type_profile {
   display: block;
 }
+
+
 }
    

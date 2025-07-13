@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import Home from "../Main/Main";
@@ -12,6 +12,8 @@ import { fetchPokemonWeaknesses } from "../../utils/api"; // Make sure it's expo
 import { fetchPokemonStrengths } from "../../utils/api";
 import { getPokemonData } from "../../utils/api";
 import Profile from "../Profile/Profile";
+import ConfirmModal from "../ReleaseModal/ReleaseModal";
+import SaveModal from "../SaveModal/SaveModal";
 
 import { useNavigate } from "react-router-dom";
 
@@ -42,8 +44,54 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [favorites, setFavorites] = useState([]);
 
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedPokemon, setSelectedPokemon] = useState(null);
+
+  const [showSaveModal, setShowSaveModal] = useState(false);
+
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [allPokemonNames, setAllPokemonNames] = useState([]);
+
   useEffect(() => {
-    if (!currentUser) return;
+    const fetchNames = async () => {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+      const data = await res.json();
+      setAllPokemonNames(data.results.map((p) => p.name));
+    };
+    fetchNames();
+  }, []);
+
+  const handleInputChange = (value) => {
+    setSearchTerm(value);
+    if (value.trim() === "") {
+      setSuggestions([]);
+      return;
+    }
+    const filtered = allPokemonNames.filter((name) =>
+      name.toLowerCase().startsWith(value.toLowerCase())
+    );
+    setSuggestions(filtered.slice(0, 8));
+  };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setLastSearch("");
+      setPokemon(null);
+      setHasSearched(false); // ✅ clear Pokémon when leaving main page
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!currentUser) {
+      setFavorites([]);
+      return;
+    }
+
     const favoritesKey = `${currentUser.email}_favorites`;
     const savedFavorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
     setFavorites(savedFavorites);
@@ -60,27 +108,18 @@ const App = () => {
 
     const simplifiedData = {
       name: pokemonToSave.name,
-      sprite:
-        pokemonToSave.sprites?.front_default ||
-        pokemonToSave.imageNormal,
+      sprite: pokemonToSave.sprites?.front_default || pokemonToSave.imageNormal,
       description: pokemonToSave.description || "No description available.",
-      shinySprite: pokemon.sprites?.front_shiny || null,
+      shinySprite: pokemonToSave.sprites?.front_shiny || null,
+      isLegendary: pokemonToSave.isLegendary || false,
+      isMythical: pokemonToSave.isMythical || false,
     };
 
     existing.push(simplifiedData);
     localStorage.setItem(key, JSON.stringify(existing));
     setFavorites([...existing]); // Refresh state for render
-  };
 
-  const navigate = useNavigate();
-
-  const handleSignOut = () => {
-    // Clear the current user and session
-    setCurrentUser(null);
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    navigate("/");
-    setActiveModal(""); // Close any open modals
+    setShowSaveModal(true);
   };
 
   useEffect(() => {
@@ -142,14 +181,18 @@ const App = () => {
     fetchSpecies();
   }, [pokemonName]);
 
+  const [lastSearch, setLastSearch] = useState("");
+
   const handleSearch = async (input) => {
     let searchTerm;
+    let shouldResetInput = false;
 
     if (typeof input === "string") {
       searchTerm = input;
     } else {
       input.preventDefault();
       searchTerm = query;
+      shouldResetInput = true;
     }
 
     if (!searchTerm) return;
@@ -160,6 +203,9 @@ const App = () => {
     setWeaknesses([]);
     setStrengths([]);
     setLoading(true);
+    setLastSearch(searchTerm);
+    setHasSearched(true);
+    setSearchTerm("");
 
     try {
       const result = await fetchPokemonByName(searchTerm);
@@ -171,12 +217,16 @@ const App = () => {
 
       const strengthData = await fetchPokemonStrengths(searchTerm);
       setStrengths(strengthData);
-    } catch {
+    } catch (error) {
+      console.error("Search failed:", error);
       setPokemon(null);
       setWeaknesses([]);
       setStrengths([]);
     } finally {
       setLoading(false);
+      if (shouldResetInput) {
+        setQuery(""); // 👈 this clears the input field
+      }
     }
   };
 
@@ -247,6 +297,9 @@ const App = () => {
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
+    console.log("Current users:", users);
+    console.log("Trying to register:", normalizedEmail);
+
     const duplicate = users.find(
       (user) => user.email.trim().toLowerCase() === normalizedEmail
     );
@@ -263,9 +316,30 @@ const App = () => {
     closeAllModals(); // if this exists
   };
 
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    // Clear the current user and session
+    setCurrentUser(null);
+    setFavorites([]);
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/");
+    setActiveModal(""); // Close any open modals
+  };
+
   // ⛳ Example modal triggers
   const handleLoginClick = () => setActiveModal("login");
   const handleSignUpClick = () => setActiveModal("register");
+
+  const handleRelease = (pokemonName) => {
+    const updatedFavorites = favorites.filter((p) => p.name !== pokemonName);
+    setFavorites(updatedFavorites);
+    // Optionally update localStorage
+
+    const key = `${currentUser.email}_favorites`;
+    localStorage.setItem(key, JSON.stringify(updatedFavorites));
+  };
 
   return (
     <div className="page">
@@ -305,6 +379,12 @@ const App = () => {
                   pokedexList={pokedexList}
                   handleSave={handleSavePokemon}
                   currentUser={currentUser}
+                  lastSearch={lastSearch}
+                  searchTerm={searchTerm}
+                  suggestions={suggestions}
+                  setSuggestions={setSuggestions}
+                  handleInputChange={handleInputChange}
+                  setSearchTerm={setSearchTerm}
                 />
               }
             />
@@ -317,6 +397,10 @@ const App = () => {
                   isLoggedIn={isLoggedIn}
                   favorites={favorites}
                   setFavorites={setFavorites}
+                  showConfirmModal={showConfirmModal}
+                  selectedPokemon={selectedPokemon}
+                  setShowConfirmModal={setShowConfirmModal} // ✅ pass setter
+                  setSelectedPokemon={setSelectedPokemon}
                 />
               }
             />
@@ -326,6 +410,8 @@ const App = () => {
             isOpen={activeModal === "register"}
             onClose={closeAllModals}
             onRegister={handleRegister}
+            setCurrentUser={setCurrentUser}
+            setIsLoggedIn={setIsLoggedIn}
             onLoginClick={handleLoginClick}
           />
 
@@ -336,6 +422,21 @@ const App = () => {
             passwordError={passwordError}
             setPasswordError={setPasswordError}
             onSignupClick={handleSignUpClick}
+          />
+
+          <ConfirmModal
+            isOpen={showConfirmModal}
+            onClose={() => setShowConfirmModal(false)}
+            onConfirm={() => {
+              handleRelease(selectedPokemon); // ✅ use the function here
+              setShowConfirmModal(false);
+            }}
+            message={`Are you sure you want to release ${selectedPokemon}?`}
+          />
+
+          <SaveModal
+            isOpen={showSaveModal}
+            onClose={() => setShowSaveModal(false)}
           />
         </main>
 
