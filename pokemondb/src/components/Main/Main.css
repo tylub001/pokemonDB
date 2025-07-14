@@ -377,7 +377,9 @@ width: 70%;
     width: 100%;
   }
   .home__intro {
-    height: auto;
+  height: 570px;
+  background-position: center;
+  background-size: cover;
   }
   .home__welcome {
     flex-direction: column;
