@@ -13,6 +13,28 @@
 }
 
 
+.modal__close {
+  background-image: url(../../images/closeDark.svg);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: none;
+  transition: background-image 3s ease-in;
+}
+
+.modal__close:hover {
+  opacity: 0.6;
+  background-image: url(../../images/modalclosebtngrey.svg);
+}
+
 .modal__content_type_release {
   background: white;
   padding: 1.5rem;
@@ -20,7 +42,7 @@
  text-align: center;
   width: 80%;
   background-color: rgb(252, 246, 246);
-  border:6px solid rgb(150, 111, 111);
+  border:6px solid rgb(255, 0, 0);
   text-transform: capitalize;
 }
 

@@ -15,26 +15,17 @@
   padding: 2rem;
   border-radius: 10px;
   text-align: center;
-  border: 6px solid rgb(35, 51, 139);
+  border: 6px solid #015cf8;
 }
 
-.modal__link {
+.modal__save-link {
   display: block;
   margin-top: 1rem;
   color: #015cf8;
-
-}
-
-.modal__close {
+  background-color: transparent;
+  justify-self: center;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-image: url(../../images/closeDark.svg);
-  transition: background-image 3s ease-in;
-}
 
-.modal__close:hover {
-background-image: url(../../images/modalclosebtngrey.svg);
 }
 
 .modal {
@@ -72,6 +63,3 @@ background-image: url(../../images/modalclosebtngrey.svg);
     margin-top: 10px;
 }
 
-.modal__link {
-    text-decoration: none;
-}

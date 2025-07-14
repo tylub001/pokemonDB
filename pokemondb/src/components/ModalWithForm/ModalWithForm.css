@@ -32,14 +32,14 @@
 .modal__close {
   background-image: url(../../images/closeDark.svg);
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 10px;
+  right: 10px;
   background-color: transparent;
   cursor: pointer;
   transition: opacity 0.3s ease-in-out;
   padding: 0;
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   background-size: contain;
   background-repeat: no-repeat;
   border: none;
@@ -79,23 +79,16 @@
 }
 
 .modal__error {
-  color: red;
+  color: #ff4d00;
 }
 
 .modal__label {
   margin-bottom: 24px;
 }
 
-.modal__legend {
-  margin: 0;
-  margin-bottom: 12px;
-}
-form {
-  padding: 0;
-}
 
 .modal__submit {
-  background-color: #000;
+  background-color: #2f71e5;
   border: none;
   padding: 8px 16px;
   color: #fff;
@@ -107,7 +100,7 @@ form {
 }
 
 .modal__submit:hover {
-  background-color: #000000;
+  background-color: #588fec;
 }
 
 .modal__submit:disabled {
@@ -123,18 +116,13 @@ form {
   align-items: flex-end;
 }
 
-@media screen and (max-width: 768px) {
-  .modal {
-    align-items: flex-end;
-  }
-  .modal__content {
-    border-radius: 12px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+.modal__label {
+  color: #2f71e5;
+}
 
-  .modal__label {
-    color: blue;
+@media screen and (max-width: 768px) {
+  .modal__content {
+    width: 90%;
   }
 
   .modal__submit {
@@ -142,6 +130,7 @@ form {
   }
 
   .modal__close {
-    background-image: url(../../assets/closeDark.svg);
+      width: 15px;
+  height: 15px;
   }
 }

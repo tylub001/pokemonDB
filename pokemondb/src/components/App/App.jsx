@@ -344,8 +344,9 @@ const App = () => {
     }
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("user", JSON.stringify(newUser));
     setCurrentUser(newUser);
-    console.log("Registration successful!");
+ 
     navigate("/profile");
     closeAllModals();
   };

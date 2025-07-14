@@ -31,7 +31,7 @@ const Profile = ({
         </h2>
 
         {favorites.length === 0 ? (
-          <p className="profile__message">You haven't saved any Pokémon yet.</p>
+          <p className="profile__message">You haven't saved any Pokémon yet</p>
         ) : (
           <div className="favorites-container">
             <ul

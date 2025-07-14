@@ -1,6 +1,6 @@
 .profile {
   background-image: url(../../images/aaaa.jpg);
-  background-size: 150%; /* Extra width gives room to slide */
+  background-size: 100%;
   background-repeat: repeat-y;
 }
 
@@ -41,7 +41,6 @@
   height: auto;
 }
 
-
 .card__image {
   width: 100%;
   background-color: rgb(122, 122, 122);
@@ -55,6 +54,9 @@
 .card__description {
   font-size: 10px;
   margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+   text-align: center;
 }
 
 .card__name {
@@ -72,7 +74,6 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   display: block;
-
   margin-top: auto;
 }
 
@@ -97,7 +98,7 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .profile__message {
-  color: #837bb3;
+  color: #f72d2d;
   padding: 0 0 20px;
   font-size: 40px;
   display: flex;
@@ -106,7 +107,7 @@
 }
 
 .profile__username {
-  color: #837bb3;
+  color: #999;
 }
 
 .profile__releaseAll-btn:hover {
@@ -230,7 +231,7 @@
 
 @media (max-width: 760px) {
   .favorites__list {
-    grid-template-columns: repeat(2, 1fr); /* or 200px if you prefer fixed */
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .release-button {
@@ -239,9 +240,6 @@
   }
 }
 
-
-
-/* Small screens: switch to 1 column */
 @media (max-width: 530px) {
   .favorites__list {
     grid-template-columns: 1fr;
@@ -281,8 +279,6 @@
   .profile__info {
     font-size: 20px;
   }
-
-
 }
 
 @media (min-width: 530px) {

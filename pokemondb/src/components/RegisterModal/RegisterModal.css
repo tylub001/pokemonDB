@@ -1,40 +1,9 @@
-.modal__footer_type_register {
- margin-top: 0;
-}
 
-.modal__button_type_register {
-  padding: 8px 16px;
-  border: none;
-  font-size: 16px;
-  line-height: 20px;
-  cursor: pointer;
-  color: white;
-  background-color: #000;
-  border-radius: 4px;
-  font-weight: 700;
-  width: 65px;
-}
 
-.modal__button_disabled {
- 
-  color: #000;
-  opacity: 0.3;
-  color: #fff;
-}
 
-.modal__link {
-  margin-left: 8px;
-  font-size: 20px;
-  color: #333;
-}
 
-.modal__link {
-  background: none;
-  border: none;
-  padding: 0;
-  color: #000;
-  opacity: 0.5;
-  
-}
+
+
+
 
 

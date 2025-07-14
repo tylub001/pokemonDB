@@ -16,14 +16,12 @@ export default function RegisterModal({
   const navigate = useNavigate();
 
   useEffect(() => {
-  const emailIsValid = values.email.includes("@");
-  const passwordIsValid = values.password.length >= 2;
-  const nameIsValid = values.name.trim().length > 0;
+    const noErrors = Object.values(errors).every((msg) => msg === "");
+  const allFieldsFilled = values.email && values.password && values.name;
+  setIsValid(noErrors && allFieldsFilled);
+}, [errors, values]);
 
-  setIsValid(emailIsValid && passwordIsValid && nameIsValid);
-}, [values]);
-
-  useEffect(() => {
+useEffect(() => {
     if (isOpen) {
       setValues({ email: "", password: "", name: "" });
       setErrors({});
@@ -31,9 +29,19 @@ export default function RegisterModal({
   }, [isOpen]);
 
   const handleChange = (e) => {
-    const { name, value, validationMessage } = e.target;
-    setValues((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: validationMessage }));
+   const { name, value } = e.target;
+
+  let errorMessage = "";
+  if (name === "email" && !value.includes("@")) {
+    errorMessage = "Please enter a valid email.";
+  } else if (name === "password" && value.length < 2) {
+    errorMessage = "Password must be at least 2 characters.";
+  } else if (name === "name" && value.trim().length === 0) {
+    errorMessage = "Name cannot be empty.";
+  }
+
+  setValues((prev) => ({ ...prev, [name]: value }));
+  setErrors((prev) => ({ ...prev, [name]: errorMessage }));
   };
 
   const handleSubmit = (e) => {
@@ -104,6 +112,7 @@ export default function RegisterModal({
           className="modal__input"
           placeholder="Password"
           required
+          minLength={2}
           value={values.password}
           onChange={handleChange}
         />

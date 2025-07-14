@@ -39,8 +39,7 @@ export default function LoginModal({
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const match = users.find(
-      (user) =>
-        user.email === values.email && user.password === values.password
+      (user) => user.email === values.email && user.password === values.password
     );
 
     if (match) {
@@ -50,7 +49,7 @@ export default function LoginModal({
     }
   };
 
-   return (
+  return (
     <ModalWithForm
       title="Log In"
       name="login"
