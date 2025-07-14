@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./Footer.css"; // your CSS file
+import "./Footer.css"; 
 import githubIcon from "../../images/github.svg";
 import facebookIcon from "../../images/facebook.svg";
 
@@ -14,26 +14,25 @@ const Footer = () => {
             aria-label="Author portrait"
           ></div>
           <div className="footer__text">
-            <h4>About the Author</h4>
-            <p>
+            <h4 className="footer__heading">About the Author</h4>
+            <p className="footer__description">
               Brittany is a passionate developer with a love for backend
               architecture, expressive UI, and bringing playful creativity to
               every line of code.
             </p>
           </div>
         </div>
-        <div className="footer__container_type_profile">
-        
-          <nav className="footer__nav">
+        <div className="footer__container">
+        <nav className="footer__nav">
               <div className="nav__text">
             <Link to="/" className="nav__link">
               Home
             </Link>
-            <button className="nav__link">Triple Ten</button>
+            <button className="nav__link">TripleTen</button>
             </div>
             <div className="nav__icon">
             <a
-              href="https://github.com/tylub001"
+              href="https://www.facebook.com/brittany.tylutke"
               className="nav__link"
               target="_blank"
               rel="noopener noreferrer"
@@ -42,7 +41,7 @@ const Footer = () => {
             </a>
 
             <a
-              href="https://www.facebook.com/brittany.tylutke"
+              href="https://github.com/tylub001"
               className="nav__link"
               target="_blank"
               rel="noopener noreferrer"

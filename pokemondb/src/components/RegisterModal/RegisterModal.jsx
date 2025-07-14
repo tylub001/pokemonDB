@@ -10,9 +10,18 @@ export default function RegisterModal({
   setCurrentUser,
   setIsLoggedIn,
 }) {
+  const [isValid, setIsValid] = useState(false)
   const [values, setValues] = useState({ email: "", password: "", name: "" });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const emailIsValid = values.email.includes("@");
+  const passwordIsValid = values.password.length >= 2;
+  const nameIsValid = values.name.trim().length > 0;
+
+  setIsValid(emailIsValid && passwordIsValid && nameIsValid);
+}, [values]);
 
   useEffect(() => {
     if (isOpen) {
@@ -72,7 +81,7 @@ export default function RegisterModal({
           or Log in
         </button>
       }
-      isValid={true}
+      isValid={isValid}
     >
       <label className="modal__label">
         Email*

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
 
-const Header = ({ onLoginClick, onSignupClick, onSignOut, isLoggedIn, currentUser }) => {
+const Header = ({ onLoginClick, onSignOut, isLoggedIn, currentUser }) => {
   console.log("Header received isLoggedIn:", isLoggedIn);
 console.log("Header received currentUser:", currentUser);
   return (
@@ -10,7 +10,7 @@ console.log("Header received currentUser:", currentUser);
       <span className="header__logo">POKÉMON</span>
       <span className="header__logo-arial">DB</span>
    </div>
-      <nav className="header__nav">
+      <nav className="header__nav header__nav_type_profile">
         <Link to="/" className="nav__link">
           Home
         </Link>

@@ -1,10 +1,12 @@
 import "./main.css";
 import notFoundIcon from "../../images/not-found.svg";
-import { useRef, useEffect } from "react";
+import Preloader from "../Preloader/Preloader";
+import SearchForm from "../SearchForm/SearchForm";
+
 
 
 const Home = ({
-  query,
+query,
   setQuery,
   pokemon,
   loading,
@@ -23,100 +25,53 @@ const Home = ({
   pokemonData,
   species,
   currentIndex,
-  handleNext,
-  handlePrev,
+ setCurrentIndex,
   pokedexList,
   handleSave,
   currentUser,
   lastSearch,
-  setSearchTerm,
-  setSuggestions,
-  handleInputChange,
   searchTerm,
+  handleInputChange,
   suggestions,
+  setSuggestions,
+  suggestionRef,
+  handleNext,
+  handlePrev,
+  resultsRef,
+
 }) => {
-
-  const suggestionRef = useRef(null);
-
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      suggestionRef.current &&
-      !suggestionRef.current.contains(event.target)
-    ) {
-      setSuggestions([]); // ✅ close the list
-    }
-  };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [setSuggestions]);
+  console.log("currentIndex:", currentIndex);
+console.log("pokedexList length:", pokedexList.length);
 
   return (
     <main className="home">
       <div className="home__intro">
         <h1 className="home__welcome">
-          <span className="font-arial-normal">Welcome to </span>
+          <span className="home__welcome-to">Welcome to </span>
           <div className="home__container-main">
-            <span className="font-bungee">POKÉMON</span>
-            <span className="font-arial">DB</span>
+            <span className="home__bungee">POKÉMON</span>
+            <span className="home__db">DB</span>
           </div>
         </h1>
         <p className="home__description">
           Explore your favorite Pokémon with ease!
         </p>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSearch(searchTerm); // ✅ manually trigger search
-          }}
-        >
-          <input className="home__input"
-            type="text"
-            value={searchTerm}
-            onChange={(e) => handleInputChange(e.target.value)}
-            placeholder="Search Pokémon"
-          />
-
- <button className="home__submit" type="submit">
-            Search
-          </button>
-
-          {suggestions.length > 0 && (
-            <ul className="suggestion-list" ref={suggestionRef}>
-              {suggestions.map((name) => (
-                <li className="suggestion-item"
-                  key={name}
-                  onMouseDown={(e) => {
-                    e.preventDefault(); // ✅ prevents form submit
-                    setSearchTerm(name);
-                    setSuggestions([]);
-                    handleSearch(name);
-                  }}
-                >
-                  {name}
-                </li>
-              ))}
-            </ul>
-          )}
-         
-        </form>
+        <SearchForm
+          searchTerm={searchTerm}
+          handleInputChange={handleInputChange}
+          handleSearch={handleSearch}
+          suggestions={suggestions}
+          setSuggestions={setSuggestions}
+          suggestionRef={suggestionRef}
+        />
       </div>
-      <section className="home__results">
-        {loading && (
-          <div className="loading__wrapper">
-            <div className="loading__animation"></div>
-            <p>Searching for Pokémon...</p>
-          </div>
-        )}
+      <section className="home__results" ref={resultsRef}>
+        {loading && <Preloader />}
 
         {!loading && !pokemon && lastSearch.trim() !== "" && (
           <div className="not-found__wrapper">
             <img
-              src={notFoundIcon} // adjust path if needed
+              src={notFoundIcon}
               alt="Pokémon not found"
               className="not-found__icon"
             />
@@ -241,7 +196,12 @@ useEffect(() => {
                           <div
                             key={index}
                             className="evolution-stage"
-                            onClick={() => handleSearch(stage.name)}
+                            onClick={() => {
+                              handleSearch(stage.name);
+                              mainRef?.current?.scrollIntoView({
+                                behavior: "smooth",
+                              });
+                            }}
                             style={{ cursor: "pointer" }}
                           >
                             <img src={stage.image} alt={stage.name} />
@@ -264,6 +224,7 @@ useEffect(() => {
                   className="prev-btn"
                   onClick={handlePrev}
                   disabled={currentIndex <= 0}
+               
                 >
                   ⬅️ Previous
                 </button>
@@ -272,6 +233,7 @@ useEffect(() => {
                   className="next-btn"
                   onClick={handleNext}
                   disabled={currentIndex >= pokedexList.length - 1}
+              
                 >
                   Next ➡️
                 </button>

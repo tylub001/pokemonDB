@@ -1,46 +1,25 @@
 import "./Profile.css";
 import { useEffect, useState } from "react";
+import ConfirmModal from "../ReleaseModal/ReleaseModal";
 
 const Profile = ({
   currentUser,
   favorites,
-  setFavorites,
-
+  handleClearFavorites,
   setShowConfirmModal,
   setSelectedPokemon,
+  showReleaseAllModal,
+  setShowReleaseAllModal,
 }) => {
-  useEffect(() => {
-    if (currentUser) {
-      const key = `${currentUser.email}_favorites`;
-      const saved = JSON.parse(localStorage.getItem(key)) || [];
-      console.log("Loaded favorites:", saved);
-    }
-  }, [currentUser]);
-
-  const handleReleasePokemon = (nameToRelease) => {
-    const updatedFavorites = favorites.filter(
-      (poke) => poke.name !== nameToRelease
-    );
-
-    const key = `${currentUser.email}_favorites`;
-    localStorage.setItem(key, JSON.stringify(updatedFavorites));
-    setFavorites(updatedFavorites);
-  };
-
-  const handleClearFavorites = () => {
-    if (!currentUser) return;
-
-    const key = `${currentUser.email}_favorites`;
-    localStorage.removeItem(key);
-    setFavorites([]); // clear state so UI updates
-  };
-
-  const [shinyMap, setShinyMap] = useState({});
-
+  
   return (
     <div className="profile">
       <h1 className="profile__name">
-        Hello, {currentUser?.name || "Trainer"}!
+        Hello,{" "}
+        <span className="profile__username">
+          {currentUser?.name || "Trainer"}
+        </span>
+        !
       </h1>
       <p className="profile__description">Welcome to your Pokédex portal</p>
 
@@ -52,7 +31,7 @@ const Profile = ({
         </h2>
 
         {favorites.length === 0 ? (
-          <p>You haven't saved any Pokémon yet.</p>
+          <p className="profile__message">You haven't saved any Pokémon yet.</p>
         ) : (
           <div className="favorites-container">
             <ul
@@ -127,10 +106,16 @@ const Profile = ({
             </ul>
             <button
               className="profile__releaseAll-btn"
-              onClick={handleClearFavorites}
+              onClick={() => setShowReleaseAllModal(true)}
             >
               Release all Pokémon
             </button>
+            <ConfirmModal
+              isOpen={showReleaseAllModal}
+              onClose={() => setShowReleaseAllModal(false)}
+              onConfirm={handleClearFavorites}
+              message="Are you sure you want to release all your saved Pokémon?"
+            />
             <p className="profile__warning">
               Clicking this will release ALL pokemon back into the wild!
             </p>

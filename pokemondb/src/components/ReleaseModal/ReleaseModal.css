@@ -12,14 +12,16 @@
   
 }
 
-.modal__content {
+
+.modal__content_type_release {
   background: white;
   padding: 1.5rem;
   border-radius: 10px;
-  text-align: center;
+ text-align: center;
   width: 80%;
-  background-color: antiquewhite;
-  border:3px solid rgb(97, 9, 9)
+  background-color: rgb(252, 246, 246);
+  border:6px solid rgb(150, 111, 111);
+  text-transform: capitalize;
 }
 
 .modal__actions {

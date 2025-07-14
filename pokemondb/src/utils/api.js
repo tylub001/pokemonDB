@@ -278,3 +278,9 @@ export const getPokemonSpecies = async (name) => {
     return "Unknown species";
   }
 };
+
+export const fetchAllPokemonNames = async () => {
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+  const data = await res.json();
+  return data.results.map((p) => p.name);
+};
