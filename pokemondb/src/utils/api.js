@@ -280,8 +280,17 @@ export const getPokemonSpecies = async (name) => {
   }
 };
 
-export const fetchAllPokemonNames = async () => {
-  const res = await fetch(`${API_BASE_URL}/pokemon?limit=1000`);
-  const data = await res.json();
-  return data.results.map((p) => p.name);
+export const fetchAllPokemonNames = () => {
+  return fetch(`${API_BASE_URL}/pokemon?limit=1000`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Failed to fetch Pokémon list");
+      }
+      return res.json(); 
+    })
+    .then((data) => data.results.map((p) => p.name))
+    .catch((error) => {
+      console.error("Error fetching Pokémon names:", error); 
+      throw error;
+    });
 };
