@@ -25,7 +25,11 @@
   background-color: transparent;
   justify-self: center;
   border: none;
+  cursor: pointer;
 
+}
+.modal__save-link:hover {
+  color: #004bcc;
 }
 
 .modal {

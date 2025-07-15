@@ -1,5 +1,4 @@
 import "./Profile.css";
-import { useEffect, useState } from "react";
 import ConfirmModal from "../ReleaseModal/ReleaseModal";
 
 const Profile = ({

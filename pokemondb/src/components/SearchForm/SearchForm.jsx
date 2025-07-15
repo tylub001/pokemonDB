@@ -1,5 +1,4 @@
 import "./SearchForm.css";
-import { useState } from "react";
 
 function SearchForm({
   searchTerm,
@@ -8,9 +7,9 @@ function SearchForm({
   suggestions,
   setSuggestions,
   suggestionRef,
+  highlightedIndex,
+  setHighlightedIndex,
 }) {
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-
   return (
     <form
       className="form__search"

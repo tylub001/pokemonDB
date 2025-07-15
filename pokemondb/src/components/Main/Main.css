@@ -10,7 +10,7 @@ ul {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-image: url("../../images/xxx.jpg");
+  background-image: url("../../images/home.jpg");
   background-size: 150%;
   background-repeat: no-repeat;
   background-position: 0% center;
@@ -62,12 +62,9 @@ ul {
 
 .home__description {
   padding: 0 20px;
-
   font-size: 28px;
   margin: 20px 0 40px;
   font-size: clamp(1.2rem, 4vw, 1.75rem);
-
-  padding: 0 20px;
 }
 
 .pokemon__image {
@@ -136,7 +133,7 @@ ul {
 
 .card__wrapper {
   width: 100%;
-  background-image: url(../../images/iii.jpg);
+  background-image: url(../../images/card.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -146,8 +143,8 @@ ul {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-width: 70%;
-  max-width: 720px; /* caps width on large screens */
+  width: 70%;
+  max-width: 720px;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -196,9 +193,9 @@ width: 70%;
   margin: 20px 0;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
-
   color: #000000;
 }
+
 .pokemon__type {
   text-transform: uppercase;
   color: rgb(121, 118, 118);
@@ -377,9 +374,9 @@ width: 70%;
     width: 100%;
   }
   .home__intro {
-  height: 570px;
-  background-position: center;
-  background-size: cover;
+    height: 570px;
+    background-position: center;
+    background-size: cover;
   }
   .home__welcome {
     flex-direction: column;
@@ -388,6 +385,8 @@ width: 70%;
   .home__bungee {
     font-size: 40px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+    margin-top: 30px;
   }
 
   .font-arial {
@@ -431,10 +430,10 @@ width: 70%;
 }
 
 @media screen and (max-width: 488px) {
-  p.home__description {
+  .home__description {
     font-size: 16px;
     color: rgb(66, 66, 66);
-    margin: 10px 0;
+    margin: 30px 0 20px;
   }
   .form__search {
     width: 200px;
@@ -484,33 +483,8 @@ width: 70%;
   .home__welcome {
     margin: 10px 0;
   }
-  .font-bungee {
-    font-size: 0.6em;
-  }
-  .font-arial {
-    margin: 0;
-  }
-  .header {
-    padding: 5px;
-  }
-
-  .header__logo {
-    font-size: 16px;
-  }
-
-  .nav__link {
-    font-size: 16px;
-  }
-  .home__description {
-    font-size: 20px;
-    margin: 10px 0;
-  }
 
   .home__welcome {
     line-height: 0.8;
-  }
-
-  .font-bungee {
-    margin-bottom: 5px;
   }
 }

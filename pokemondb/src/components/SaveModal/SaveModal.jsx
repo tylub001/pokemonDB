@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { handleBackgroundClick, useEscapeKey } from "../../utils/modalUtils";
 import "./SaveModal.css";
 
 export default function SaveModal({ isOpen, onClose }) {
   const navigate = useNavigate();
+  useEscapeKey(isOpen, onClose);
+
   useEffect(() => {
     if (isOpen) {
       window.scrollTo(0, 0);
@@ -18,7 +21,10 @@ export default function SaveModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal__overlay">
+    <div
+      className="modal__overlay modal_opened"
+      onClick={(e) => handleBackgroundClick(e, onClose)}
+    >
       <div className="modal__content modal__content_type_save">
         <h2 className="modal__message">Pokémon Saved!</h2>
         <p className="modal__info">

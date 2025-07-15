@@ -15,6 +15,7 @@ import { fetchPokemonStrengths } from "../../utils/api";
 import { fetchAllPokemonNames } from "../../utils/api";
 import { getPokemonData } from "../../utils/api";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+
 import "./App.css";
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showReleaseAllModal, setShowReleaseAllModal] = useState(false);
   const [scrollKey, setScrollKey] = useState(0);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   useEffect(() => {
     const getNames = async () => {
@@ -56,19 +58,19 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-  const fetchAllPokemonNames = async () => {
-    try {
-      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1010");
-      const data = await res.json();
-      const names = data.results.map((p) => p.name.toLowerCase()); // lowercase for matching
-      setPokedexList(names);
-    } catch (err) {
-      console.error("Error fetching Pokédex list:", err);
-    }
-  };
+    const fetchAllPokemonNames = async () => {
+      try {
+        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1010");
+        const data = await res.json();
+        const names = data.results.map((p) => p.name.toLowerCase()); // lowercase for matching
+        setPokedexList(names);
+      } catch (err) {
+        console.error("Error fetching Pokédex list:", err);
+      }
+    };
 
-  fetchAllPokemonNames();
-}, []);
+    fetchAllPokemonNames();
+  }, []);
 
   const location = useLocation();
 
@@ -346,7 +348,7 @@ const App = () => {
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("user", JSON.stringify(newUser));
     setCurrentUser(newUser);
- 
+
     navigate("/profile");
     closeAllModals();
   };
@@ -412,6 +414,8 @@ const App = () => {
                   handleNext={handleNext}
                   handlePrev={handlePrev}
                   resultsRef={resultsRef}
+                  highlightedIndex={highlightedIndex}
+                  setHighlightedIndex={setHighlightedIndex}
                 />
               }
             />
@@ -459,7 +463,7 @@ const App = () => {
             isOpen={showConfirmModal}
             onClose={() => setShowConfirmModal(false)}
             onConfirm={() => {
-              handleRelease(selectedPokemon); 
+              handleRelease(selectedPokemon);
               setShowConfirmModal(false);
             }}
             message={`Are you sure you want to release ${selectedPokemon}?`}

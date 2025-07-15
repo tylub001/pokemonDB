@@ -33,7 +33,7 @@
 
 .header__nav {
   display: flex;
-  gap: 12px;
+  gap: 15px;
   align-items: center;
   margin-left: auto;
   text-decoration: none;
@@ -84,15 +84,13 @@
   .header__nav {
     margin: 6px 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    width: 100%;
+    
 
   }
 
-  .header__nav_type_profile {
-    justify-content: space-around;
-  }
-
-  .header__favorites {
+.header__favorites {
     color: rgb(236, 231, 231);
   }
   .header__logo-arial {
@@ -119,6 +117,7 @@
   .header__nav {
     gap: 8px;
     margin: 6px 0;
+    
   }
 
   button.nav__link {
@@ -126,10 +125,23 @@
   }
   a.nav__link {
     font-size: 16px;
+ 
   }
 
   .header {
-    padding: 0;
+    padding: 5px;
+    
   }
+
+  .header__logo {
+    font-size: 16px;
+    
+  }
+
+  .nav__link {
+    font-size: 16px;
+  }
+
+
 
 }

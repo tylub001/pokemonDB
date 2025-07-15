@@ -2,11 +2,10 @@ import { Link } from "react-router-dom";
 import "./Header.css";
 
 const Header = ({ onLoginClick, onSignOut, isLoggedIn, currentUser }) => {
-  console.log("Header received isLoggedIn:", isLoggedIn);
-console.log("Header received currentUser:", currentUser);
+
   return (
     <header className="header header__type_profile">
-     <div className="logo__conttainer">
+     <div className="logo__container">
       <span className="header__logo">POKÉMON</span>
       <span className="header__logo-arial">DB</span>
    </div>

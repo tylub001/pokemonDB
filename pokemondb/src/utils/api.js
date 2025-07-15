@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 const formAliases = {
   lycanroc: "lycanroc-midday",
   lycanroc_midnight: "lycanroc-midnight",
@@ -22,17 +24,16 @@ const normalizeSpecies = (name) => {
 
 export const fetchPokemonByName = async (name) => {
   try {
-    const normalizedName = normalizeName(name); // Used for Pokémon data (moves, stats, images)
-    const normalizedSpecies = normalizeSpecies(name); // Used for species info (genus, flavor text)
-
+    const normalizedName = normalizeName(name); 
+    const normalizedSpecies = normalizeSpecies(name); 
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+      `${API_BASE_URL}/pokemon/${normalizedName}`
     );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
 
     const speciesRes = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`
+      `${API_BASE_URL}/pokemon-species/${normalizedSpecies}`
     );
     if (!speciesRes.ok) throw new Error("Species data not found");
     const speciesData = await speciesRes.json();
@@ -64,7 +65,7 @@ export const fetchPokemonByName = async (name) => {
         .map((entry) => entry.move.name),
       abilities: data.abilities.map((abilityObj) => abilityObj.ability.name),
       description,
-      isLegendary, // ✅ now available
+      isLegendary, 
       isMythical,
     };
   } catch (error) {
@@ -77,7 +78,7 @@ export const fetchEvolutionChain = async (name) => {
     const normalizedSpecies = normalizeSpecies(name);
 
     const speciesRes = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`
+      `${API_BASE_URL}/pokemon-species/${normalizedSpecies}`
     );
     if (!speciesRes.ok) throw new Error("Species not found");
 
@@ -92,16 +93,16 @@ export const fetchEvolutionChain = async (name) => {
 
     const imageOverrides = {
       lycanroc: "lycanroc-midday",
-      // Add more overrides here if needed
+     
     };
 
-    // Recursive traversal — each Pokémon gets the condition to evolve from its previous form
+   
     const traverseChain = async (node, incomingCondition = "—") => {
       const speciesName = node.species.name;
       const resolvedName = imageOverrides[speciesName] || speciesName;
 
       const pokeRes = await fetch(
-        `https://pokeapi.co/api/v2/pokemon/${resolvedName}`
+        `${API_BASE_URL}/pokemon/${resolvedName}`
       );
       if (!pokeRes.ok) throw new Error(`Could not fetch ${resolvedName}`);
       const pokeData = await pokeRes.json();
@@ -109,9 +110,9 @@ export const fetchEvolutionChain = async (name) => {
 
       let condition = "Does not evolve";
 
-      // If there are child evolutions, extract condition from them
+     
       if (node.evolves_to.length > 0) {
-        const child = node.evolves_to[0]; // You can extend this to loop over all branches
+        const child = node.evolves_to[0]; 
         const evoDetails = child.evolution_details?.[0];
 
         if (evoDetails) {
@@ -138,7 +139,7 @@ export const fetchEvolutionChain = async (name) => {
 
       evoChain.push({ name: speciesName, image, condition });
 
-      // Continue traversing children
+   
       for (const next of node.evolves_to) {
         await traverseChain(next);
       }
@@ -156,9 +157,9 @@ export const fetchPokemonWeaknesses = async (name) => {
   try {
     const normalizedName = normalizeName(name);
 
-    // Get type data from Pokémon endpoint
+   
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+      `${API_BASE_URL}/pokemon/${normalizedName}`
     );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
@@ -170,9 +171,9 @@ export const fetchPokemonWeaknesses = async (name) => {
       no_damage_from: [],
     };
 
-    // Fetch damage relations for each type
+  
     for (const typeName of typeNames) {
-      const typeRes = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`);
+      const typeRes = await fetch(`${API_BASE_URL}/type/${typeName}`);
       if (!typeRes.ok) throw new Error(`Type ${typeName} not found`);
       const typeData = await typeRes.json();
 
@@ -183,7 +184,7 @@ export const fetchPokemonWeaknesses = async (name) => {
       }
     }
 
-    // Merge weaknesses from multiple types
+ 
     const countTypes = (arr) =>
       arr.reduce((acc, val) => {
         acc[val] = (acc[val] || 0) + 1;
@@ -194,7 +195,7 @@ export const fetchPokemonWeaknesses = async (name) => {
     const halfDamage = new Set(damageRelations.half_damage_from);
     const noDamage = new Set(damageRelations.no_damage_from);
 
-    // Final weaknesses: filter out resisted or immune types
+  
     const finalWeaknesses = Object.entries(doubleDamage)
       .filter(([type, count]) => !halfDamage.has(type) && !noDamage.has(type))
       .map(([type, count]) => ({
@@ -213,9 +214,9 @@ export const fetchPokemonStrengths = async (name) => {
   try {
     const normalizedName = normalizeName(name);
 
-    // Fetch the Pokémon's type info
+ 
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${normalizedName}`
+      `${API_BASE_URL}/pokemon/${normalizedName}`
     );
     if (!res.ok) throw new Error("Pokémon not found");
     const data = await res.json();
@@ -223,9 +224,9 @@ export const fetchPokemonStrengths = async (name) => {
     const typeNames = data.types.map((typeObj) => typeObj.type.name);
     const strengthsSet = new Set();
 
-    // For each type, get its offensive strengths
+    
     for (const typeName of typeNames) {
-      const typeRes = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`);
+      const typeRes = await fetch(`${API_BASE_URL}/type/${typeName}`);
       if (!typeRes.ok) throw new Error(`Type ${typeName} not found`);
       const typeData = await typeRes.json();
 
@@ -244,7 +245,7 @@ export const fetchPokemonStrengths = async (name) => {
 export const getPokemonData = async (pokemonName) => {
   try {
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`
+      `${API_BASE_URL}/pokemon/${pokemonName.toLowerCase()}`
     );
     if (!res.ok) throw new Error("Pokémon not found");
     return await res.json();
@@ -259,7 +260,7 @@ export const getPokemonSpecies = async (name) => {
     const normalizedSpecies = normalizeSpecies(name);
 
     const res = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${normalizedSpecies}`
+      `${API_BASE_URL}/pokemon-species/${normalizedSpecies}`
     );
     if (!res.ok)
       throw new Error(`Species fetch failed for ${normalizedSpecies}`);
@@ -280,7 +281,7 @@ export const getPokemonSpecies = async (name) => {
 };
 
 export const fetchAllPokemonNames = async () => {
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+  const res = await fetch(`${API_BASE_URL}/pokemon?limit=1000`);
   const data = await res.json();
   return data.results.map((p) => p.name);
 };

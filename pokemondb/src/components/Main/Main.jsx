@@ -3,29 +3,20 @@ import notFoundIcon from "../../images/not-found.svg";
 import Preloader from "../Preloader/Preloader";
 import SearchForm from "../SearchForm/SearchForm";
 
-
-
 const Home = ({
-query,
-  setQuery,
   pokemon,
   loading,
   showShiny,
   setShowShiny,
   handleSearch,
-  showMoves,
-  setShowMoves,
   evolutionChain,
   showEvolution,
   handleShowEvolution,
-  showAbilities,
-  setShowAbilities,
   weaknesses = [],
   strengths = [],
   pokemonData,
   species,
   currentIndex,
- setCurrentIndex,
   pokedexList,
   handleSave,
   currentUser,
@@ -38,10 +29,11 @@ query,
   handleNext,
   handlePrev,
   resultsRef,
-
+  highlightedIndex,
+  setHighlightedIndex,
 }) => {
   console.log("currentIndex:", currentIndex);
-console.log("pokedexList length:", pokedexList.length);
+  console.log("pokedexList length:", pokedexList.length);
 
   return (
     <main className="home">
@@ -63,6 +55,8 @@ console.log("pokedexList length:", pokedexList.length);
           suggestions={suggestions}
           setSuggestions={setSuggestions}
           suggestionRef={suggestionRef}
+          highlightedIndex={highlightedIndex}
+          setHighlightedIndex={setHighlightedIndex}
         />
       </div>
       <section className="home__results" ref={resultsRef}>
@@ -224,7 +218,6 @@ console.log("pokedexList length:", pokedexList.length);
                   className="prev-btn"
                   onClick={handlePrev}
                   disabled={currentIndex <= 0}
-               
                 >
                   ⬅️ Previous
                 </button>
@@ -233,7 +226,6 @@ console.log("pokedexList length:", pokedexList.length);
                   className="next-btn"
                   onClick={handleNext}
                   disabled={currentIndex >= pokedexList.length - 1}
-              
                 >
                   Next ➡️
                 </button>
