@@ -48,6 +48,64 @@ const App = () => {
   const [showReleaseAllModal, setShowReleaseAllModal] = useState(false);
   const [scrollKey, setScrollKey] = useState(0);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const [values, setValues] = useState({ email: "", password: "", name: "" });
+  const [errors, setErrors] = useState({});
+
+  const resetRegisterForm = () => {
+    setValues({ email: "", password: "", name: "" });
+  };
+
+  const validateUserInput = ({ email, password }) => {
+    const isEmailValid = email.includes("@");
+    const isPasswordValid = password.length >= 2;
+    setIsValid(isEmailValid && isPasswordValid);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+      if (pathname !== "/") {
+        window.scrollTo(0, 0);
+      }
+    }, [pathname]);
+
+    return null;
+  }
+
+  const resultsRef = useRef(null);
+
+  useEffect(() => {
+    if (shouldScroll && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth" });
+      setShouldScroll(false); // reset scroll flag
+    }
+  }, [shouldScroll]);
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      const prevName = pokedexList[currentIndex - 1];
+      setCurrentIndex(currentIndex - 1);
+      handleSearch(prevName);
+      setShouldScroll(true);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < pokedexList.length - 1) {
+      const nextName = pokedexList[currentIndex + 1];
+      setCurrentIndex(currentIndex + 1);
+      handleSearch(nextName);
+      setShouldScroll(true);
+    }
+  };
 
   useEffect(() => {
     const getNames = async () => {
@@ -62,7 +120,7 @@ const App = () => {
       try {
         const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1010");
         const data = await res.json();
-        const names = data.results.map((p) => p.name.toLowerCase()); // lowercase for matching
+        const names = data.results.map((p) => p.name.toLowerCase());
         setPokedexList(names);
       } catch (err) {
         console.error("Error fetching Pokédex list:", err);
@@ -123,43 +181,6 @@ const App = () => {
     setSuggestions(filtered.slice(0, 8));
   };
 
-  const resultsRef = useRef(null);
-
-  useEffect(() => {
-    if (resultsRef.current) {
-      const timeout = setTimeout(() => {
-        resultsRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-      return () => clearTimeout(timeout);
-    }
-  }, [scrollKey]);
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      const prevName = pokedexList[currentIndex - 1];
-      setCurrentIndex(currentIndex - 1);
-      handleSearch(prevName);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentIndex < pokedexList.length - 1) {
-      const nextName = pokedexList[currentIndex + 1];
-      setCurrentIndex(currentIndex + 1);
-      handleSearch(nextName);
-    }
-  };
-
-  useEffect(() => {
-    if (resultsRef.current) {
-      const timeout = setTimeout(() => {
-        resultsRef.current.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [scrollKey]);
-
   const handleSearch = async (input) => {
     let searchTerm;
     let shouldResetInput = false;
@@ -195,6 +216,7 @@ const App = () => {
 
       const strengthData = await fetchPokemonStrengths(searchTerm);
       setStrengths(strengthData);
+      setShouldScroll(true);
     } catch (error) {
       console.error("Search failed:", error);
       setPokemon(null);
@@ -226,7 +248,7 @@ const App = () => {
   useEffect(() => {
     const fetchSpecies = async () => {
       try {
-        const result = await getPokemonSpecies(pokemonName); // Replace with dynamic name
+        const result = await getPokemonSpecies(pokemonName);
         setSpecies(result);
       } catch (error) {
         console.error(error);
@@ -348,9 +370,10 @@ const App = () => {
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("user", JSON.stringify(newUser));
     setCurrentUser(newUser);
-
+    setIsLoggedIn(true);
     navigate("/profile");
     closeAllModals();
+    resetRegisterForm();
   };
 
   const handleSignOut = () => {
@@ -367,116 +390,130 @@ const App = () => {
   const handleSignUpClick = () => setActiveModal("register");
 
   return (
-    <div className="page">
-      <div className="page__content page__content_type_profile">
-        <Header
-          onLoginClick={handleLoginClick}
-          onSignupClick={handleSignUpClick}
-          onSignOut={handleSignOut}
-          isLoggedIn={isLoggedIn}
-          currentUser={currentUser}
-        />
-        <main>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Home
-                  query={query}
-                  setQuery={setQuery}
-                  pokemon={pokemon}
-                  loading={loading}
-                  showShiny={showShiny}
-                  setShowShiny={setShowShiny}
-                  handleSearch={handleSearch}
-                  evolutionChain={evolutionChain}
-                  showEvolution={showEvolution}
-                  handleShowEvolution={handleShowEvolution}
-                  showAbilities={showAbilities}
-                  setShowAbilities={setShowAbilities}
-                  weaknesses={weaknesses}
-                  strengths={strengths}
-                  pokemonData={pokemonData}
-                  species={species}
-                  currentIndex={currentIndex}
-                  setCurrentIndex={setCurrentIndex}
-                  pokedexList={pokedexList}
-                  handleSave={handleSavePokemon}
-                  currentUser={currentUser}
-                  lastSearch={lastSearch}
-                  searchTerm={searchTerm}
-                  handleInputChange={handleInputChange}
-                  suggestions={suggestions}
-                  setSuggestions={setSuggestions}
-                  suggestionRef={suggestionRef}
-                  scrollKey={scrollKey}
-                  setScrollKey={setScrollKey}
-                  handleNext={handleNext}
-                  handlePrev={handlePrev}
-                  resultsRef={resultsRef}
-                  highlightedIndex={highlightedIndex}
-                  setHighlightedIndex={setHighlightedIndex}
-                />
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute isLoggedIn={isLoggedIn}>
-                  <Profile
-                    currentUser={currentUser}
-                    isLoggedIn={isLoggedIn}
-                    favorites={favorites}
-                    setFavorites={setFavorites}
-                    showConfirmModal={showConfirmModal}
-                    selectedPokemon={selectedPokemon}
-                    setShowConfirmModal={setShowConfirmModal}
-                    setSelectedPokemon={setSelectedPokemon}
-                    showReleaseAllModal={showReleaseAllModal}
-                    setShowReleaseAllModal={setShowReleaseAllModal}
-                    handleClearFavorites={handleClearFavorites}
-                  />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-
-          <RegisterModal
-            isOpen={activeModal === "register"}
-            onClose={closeAllModals}
-            onRegister={handleRegister}
-            setCurrentUser={setCurrentUser}
-            setIsLoggedIn={setIsLoggedIn}
+    <>
+      <ScrollToTop />
+      <div className="page">
+        <div className="page__content page__content_type_profile">
+          <Header
             onLoginClick={handleLoginClick}
-          />
-
-          <LoginModal
-            isOpen={activeModal === "login"}
-            onClose={closeAllModals}
-            onLogin={handleLogin}
-            passwordError={passwordError}
-            setPasswordError={setPasswordError}
             onSignupClick={handleSignUpClick}
+            onSignOut={handleSignOut}
+            isLoggedIn={isLoggedIn}
+            currentUser={currentUser}
           />
 
-          <ConfirmModal
-            isOpen={showConfirmModal}
-            onClose={() => setShowConfirmModal(false)}
-            onConfirm={() => {
-              handleRelease(selectedPokemon);
-              setShowConfirmModal(false);
-            }}
-            message={`Are you sure you want to release ${selectedPokemon}?`}
-          />
+          <main>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Home
+                    query={query}
+                    setQuery={setQuery}
+                    pokemon={pokemon}
+                    loading={loading}
+                    showShiny={showShiny}
+                    setShowShiny={setShowShiny}
+                    handleSearch={handleSearch}
+                    evolutionChain={evolutionChain}
+                    showEvolution={showEvolution}
+                    handleShowEvolution={handleShowEvolution}
+                    showAbilities={showAbilities}
+                    setShowAbilities={setShowAbilities}
+                    weaknesses={weaknesses}
+                    strengths={strengths}
+                    pokemonData={pokemonData}
+                    species={species}
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
+                    pokedexList={pokedexList}
+                    handleSave={handleSavePokemon}
+                    currentUser={currentUser}
+                    lastSearch={lastSearch}
+                    searchTerm={searchTerm}
+                    handleInputChange={handleInputChange}
+                    suggestions={suggestions}
+                    setSuggestions={setSuggestions}
+                    suggestionRef={suggestionRef}
+                    scrollKey={scrollKey}
+                    setScrollKey={setScrollKey}
+                    handleNext={handleNext}
+                    handlePrev={handlePrev}
+                    resultsRef={resultsRef}
+                    highlightedIndex={highlightedIndex}
+                    setHighlightedIndex={setHighlightedIndex}
+                    shouldScroll={shouldScroll}
+                    setShouldScroll={setShouldScroll}
+                    hasMounted={hasMounted}
+                    setHasMounted={setHasMounted}
+                  />
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Profile
+                      currentUser={currentUser}
+                      isLoggedIn={isLoggedIn}
+                      favorites={favorites}
+                      setFavorites={setFavorites}
+                      showConfirmModal={showConfirmModal}
+                      selectedPokemon={selectedPokemon}
+                      setShowConfirmModal={setShowConfirmModal}
+                      setSelectedPokemon={setSelectedPokemon}
+                      showReleaseAllModal={showReleaseAllModal}
+                      setShowReleaseAllModal={setShowReleaseAllModal}
+                      handleClearFavorites={handleClearFavorites}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
 
-          <SaveModal
-            isOpen={showSaveModal}
-            onClose={() => setShowSaveModal(false)}
-          />
-        </main>
-        <Footer />
+            <RegisterModal
+              isOpen={activeModal === "register"}
+              onClose={closeAllModals}
+              onRegister={handleRegister}
+              onLoginClick={handleLoginClick}
+              setCurrentUser={setCurrentUser}
+              setIsLoggedIn={setIsLoggedIn}
+              isValid={isValid}
+              setIsValid={setIsValid}
+              validateUserInput={validateUserInput}
+              values={values}
+              setValues={setValues}
+              errors={errors}
+              setErrors={setErrors}
+            />
+            <LoginModal
+              isOpen={activeModal === "login"}
+              onClose={closeAllModals}
+              onLogin={handleLogin}
+              passwordError={passwordError}
+              setPasswordError={setPasswordError}
+              onSignupClick={handleSignUpClick}
+            />
+
+            <ConfirmModal
+              isOpen={showConfirmModal}
+              onClose={() => setShowConfirmModal(false)}
+              onConfirm={() => {
+                handleRelease(selectedPokemon);
+                setShowConfirmModal(false);
+              }}
+              message={`Are you sure you want to release ${selectedPokemon}?`}
+            />
+
+            <SaveModal
+              isOpen={showSaveModal}
+              onClose={() => setShowSaveModal(false)}
+            />
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -31,9 +31,12 @@ const Home = ({
   resultsRef,
   highlightedIndex,
   setHighlightedIndex,
+  shouldScroll,
+  setShouldScroll,
+  hasMounted,
+  setHasMounted
 }) => {
-  console.log("currentIndex:", currentIndex);
-  console.log("pokedexList length:", pokedexList.length);
+
 
   return (
     <main className="home">
@@ -192,7 +195,7 @@ const Home = ({
                             className="evolution-stage"
                             onClick={() => {
                               handleSearch(stage.name);
-                              mainRef?.current?.scrollIntoView({
+                              resultsRef?.current?.scrollIntoView({
                                 behavior: "smooth",
                               });
                             }}

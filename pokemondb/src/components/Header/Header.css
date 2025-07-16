@@ -18,8 +18,8 @@
 .header__logo-arial {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 800;
-  font-size: 20px;
-  color: rgb(252, 252, 252);
+  font-size: 25px;
+  color: rgb(255, 255, 255);
 }
 
 @keyframes slideRight {
@@ -33,18 +33,23 @@
 
 .header__nav {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: center;
   margin-left: auto;
   text-decoration: none;
 }
 
-.nav__button {
-  border: none;
-  background-color: transparent;
+.nav__favorites {
+  text-decoration: none;
+  transition: transform 0.2s ease, 0.2s ease;
 }
 
-.nav__link {
+.header--profile .nav__home {
+  display: inline-block;
+}
+.nav__login,
+.nav__home,
+.nav__logout {
   text-decoration: none;
   border: none;
   background-color: transparent;
@@ -53,7 +58,9 @@
   transition: transform 0.2s ease, 0.2s ease;
   cursor: pointer;
 }
-.nav__link:hover {
+.nav__home:hover,
+.nav__logout:hover,
+.nav__favorites:hover {
   transform: translateY(-2px);
 }
 
@@ -75,73 +82,63 @@
   transform: skewY(-10deg);
 }
 
-@media screen and (max-width: 660px) {
+.profile__icon {
+  width: 24px;
+  height: 24px;
+  display: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, 0.2s ease;
+}
+
+.profile__icon:hover {
+  transform: translateY(-2px);
+}
+
+.nav__icon-wrapper {
+  display: none;
+}
+
+@media screen and (max-width: 530px) {
   .header {
-    flex-direction: column;
     padding: 10px;
   }
 
-  .header__nav {
-    margin: 6px 0;
+  .header--profile .nav__home {
+    display: none;
+  }
+
+  .header--profile .nav__icon-wrapper {
+    display: inline-block;
+  }
+
+  .nav__login,
+  .nav__logout,
+  .nav__favorites {
+    display: none;
+  }
+  .nav__icon-wrapper {
+    width: fit-content;
     display: flex;
-    justify-content: space-between;
-    width: 100%;
-    
-
+    padding: 0;
+    border: none;
+    background-color: transparent;
   }
 
-.header__favorites {
-    color: rgb(236, 231, 231);
-  }
-  .header__logo-arial {
-    color: black;
-    opacity: 0.8;
+  .nav__login {
+    display: block;
   }
 
-  .header__logo {
-    color: black;
-    opacity: 0.8;
-     border: 1px solid black;
-  }
-}
-
-@media screen and (max-width: 423px) {
-  .header__my-favorites {
-    color: #fff;
-  }
-
-  .header__favorites {
-    color: white;
+  .profile__icon {
+    display: inline-block;
   }
 
   .header__nav {
+    gap: 20px;
+    font-size: 16px;
+  }
+
+  .header--home .header__nav {
     gap: 8px;
-    margin: 6px 0;
-    
   }
-
-  button.nav__link {
-    font-size: 16px;
-  }
-  a.nav__link {
-    font-size: 16px;
- 
-  }
-
-  .header {
-    padding: 5px;
-    
-  }
-
-  .header__logo {
-    font-size: 16px;
-    
-  }
-
-  .nav__link {
-    font-size: 16px;
-  }
-
-
-
 }
+

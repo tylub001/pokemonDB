@@ -17,6 +17,15 @@
   margin-top: 50px;
 }
 
+.nav__link-footer {
+  text-decoration: none;
+  border: none;
+  background-color: transparent;
+  color:#bbb;
+  font-weight: 700;
+  padding-right:10px
+}
+
 .footer__image {
   width: 30vw;
   height: 30vw;
@@ -132,7 +141,7 @@
     gap: 5px;
   }
 
-  .nav__link {
+  .nav__link-footer {
     padding: 0;
   }
 }

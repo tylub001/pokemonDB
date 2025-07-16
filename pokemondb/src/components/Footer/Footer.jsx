@@ -29,10 +29,10 @@ const Footer = () => {
         <div className="footer__container">
           <nav className="footer__nav">
             <div className="nav__text">
-              <Link to="/" className="nav__link">
+              <Link to="/" className="nav__link-footer">
                 Home
               </Link>
-              <button className="nav__link">TripleTen</button>
+              <button className="nav__link-footer">TripleTen</button>
             </div>
             <div className="nav__icon">
               <a

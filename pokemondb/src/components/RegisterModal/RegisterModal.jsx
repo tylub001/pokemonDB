@@ -1,81 +1,61 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
-import { useNavigate } from "react-router-dom";
+
 
 export default function RegisterModal({
-  isOpen,
+ isOpen,
   onClose,
   onRegister,
   onLoginClick,
-  setCurrentUser,
-  setIsLoggedIn,
+  isValid,
+  validateUserInput,
+  values,
+  setValues,
+  errors,
+  setErrors,
+
 }) {
-  const [isValid, setIsValid] = useState(false)
-  const [values, setValues] = useState({ email: "", password: "", name: "" });
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-
   useEffect(() => {
-    const noErrors = Object.values(errors).every((msg) => msg === "");
-  const allFieldsFilled = values.email && values.password && values.name;
-  setIsValid(noErrors && allFieldsFilled);
-}, [errors, values]);
-
-useEffect(() => {
-    if (isOpen) {
-      setValues({ email: "", password: "", name: "" });
-      setErrors({});
-    }
-  }, [isOpen]);
+  if (isOpen) {
+    setErrors({});
+  }
+}, [isOpen]);
 
   const handleChange = (e) => {
-   const { name, value } = e.target;
-
+  const { name, value } = e.target;
+  setValues((prev) => ({ ...prev, [name]: value }));
   let errorMessage = "";
-  if (name === "email" && !value.includes("@")) {
-    errorMessage = "Please enter a valid email.";
-  } else if (name === "password" && value.length < 2) {
-    errorMessage = "Password must be at least 2 characters.";
-  } else if (name === "name" && value.trim().length === 0) {
-    errorMessage = "Name cannot be empty.";
+if (name === "email" && !value.includes("@")) {
+  errorMessage = "Please enter a valid email.";
+} else if (name === "password" && value.length < 2) {
+  errorMessage = "Password must be at least 2 characters.";
+} else if (name === "name" && value.trim().length === 0) {
+  errorMessage = "Name cannot be empty.";
+}
+
+setErrors((prev) => ({ ...prev, [name]: errorMessage }));
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (!values.email || !values.password || !values.name) {
+    alert("Please fill out all fields.");
+    return;
   }
 
-  setValues((prev) => ({ ...prev, [name]: value }));
-  setErrors((prev) => ({ ...prev, [name]: errorMessage }));
-  };
+  onRegister({
+    name: values.name.trim(),
+    email: values.email.trim(),
+    password: values.password,
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  onClose();
+};
 
-    if (!values.email || !values.password || !values.name) {
-      alert("Please fill out all fields.");
-      return;
-    }
-    const newUser = {
-      name: values.name,
-      email: values.email,
-      password: values.password,
-    };
-
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const duplicate = existingUsers.find((user) => user.email === values.email);
-
-    if (duplicate) {
-      alert("A user with this email already exists.");
-      return;
-    }
-
-    existingUsers.push(newUser);
-    localStorage.setItem("users", JSON.stringify(existingUsers));
-    localStorage.setItem("user", JSON.stringify(newUser));
-
-    setCurrentUser(newUser);
-    setIsLoggedIn(true);
-
-    onRegister(newUser);
-    onClose();
-    navigate("/profile");
-  };
+useEffect(() => {
+  validateUserInput(values);
+}, [values]);
 
   return (
     <ModalWithForm

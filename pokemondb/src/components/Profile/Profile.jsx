@@ -14,7 +14,7 @@ const Profile = ({
   return (
     <div className="profile">
       <h1 className="profile__name">
-        Hello,{" "}
+        Hello,&nbsp;
         <span className="profile__username">
           {currentUser?.name || "Trainer"}
         </span>
