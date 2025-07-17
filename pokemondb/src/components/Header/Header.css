@@ -1,3 +1,4 @@
+
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -44,9 +45,7 @@
   transition: transform 0.2s ease, 0.2s ease;
 }
 
-.header--profile .nav__home {
-  display: inline-block;
-}
+
 .nav__login,
 .nav__home,
 .nav__logout {
@@ -64,15 +63,16 @@
   transform: translateY(-2px);
 }
 
-.header__my-favorites {
+.nav__my {
   font-family: Arial, Helvetica, sans-serif;
-  color: red;
+  color: rgb(255, 0, 0);
   font-weight: 800;
-  font-size: 13px;
-  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 18px;
 }
 
-.header__favorites {
+
+
+.header__favorites, .nav__favorites {
   font-family: "Bungee";
   color: red;
   font-size: 15px;
@@ -98,47 +98,51 @@
   display: none;
 }
 
+.header__type_profile {
+  border: 2px solid grey;
+}
+
+
+
 @media screen and (max-width: 530px) {
   .header {
     padding: 10px;
   }
 
-  .header--profile .nav__home {
+ 
+  .header--logged-in .nav__home,
+  .header--logged-in .nav__favorites,
+  .header--logged-in .nav__logout {
     display: none;
   }
 
-  .header--profile .nav__icon-wrapper {
-    display: inline-block;
-  }
-
-  .nav__login,
-  .nav__logout,
-  .nav__favorites {
-    display: none;
-  }
-  .nav__icon-wrapper {
-    width: fit-content;
+  .header--logged-in .nav__icon-wrapper {
     display: flex;
-    padding: 0;
-    border: none;
+  }
+
+  .nav__icon-wrapper {
+    display: flex;
     background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .profile__icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
   }
 
   .nav__login {
     display: block;
   }
-
-  .profile__icon {
-    display: inline-block;
-  }
-
   .header__nav {
     gap: 20px;
     font-size: 16px;
   }
 
-  .header--home .header__nav {
-    gap: 8px;
-  }
+
 }
+
 

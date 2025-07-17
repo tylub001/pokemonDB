@@ -62,7 +62,7 @@ const Profile = ({
                     <div
                       className={`pokemon-image-wrapper ${
                         poke.isLegendary || poke.isMythical
-                          ? "special-image"
+                          ? "special-image special-image_type_profile"
                           : "regular-image regular-image_type_profile"
                       }`}
                     >

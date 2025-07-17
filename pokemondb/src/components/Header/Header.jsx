@@ -8,28 +8,39 @@ const Header = ({ onLoginClick, onSignOut, isLoggedIn, currentUser }) => {
   const location = useLocation();
   const isProfileRoute = location.pathname === "/profile";
   return (
-   <header className={`header ${isProfileRoute ? "header--profile" : "header--home"}`}>
+    <header className={`header ${isLoggedIn ? "header--logged-in" : ""}`}>
       <div className="logo__container">
         <span className="header__logo">POKÉMON</span>
         <span className="header__logo-arial">DB</span>
       </div>
       <nav className="header__nav">
-       
-          <Link to="/" className="nav__home">
-            Home
-          </Link>
-        
-        {isProfileRoute && (
-          <Link to="/" className="nav__icon-wrapper">
-            <img src={homeIcon} alt="Home" className="profile__icon" />
-          </Link>
+        {!isLoggedIn && (
+          <>
+            <Link to="/" className="nav__home">
+              Home
+            </Link>
+            <button className="nav__login" onClick={onLoginClick}>
+              Login
+            </button>
+          </>
         )}
 
-        {isLoggedIn && currentUser ? (
+        {isLoggedIn && (
           <>
+            <Link to="/" className="nav__home">
+              Home
+            </Link>
             <Link to="/profile" className="nav__favorites">
-              <span className="header__my-favorites">MY</span>
-              <span className="header__favorites">POKÉMON</span>
+              <span className="nav__my">MY</span>
+        <span>pokemon</span>
+            </Link>
+            <button className="nav__logout" onClick={onSignOut}>
+              Logout
+            </button>
+
+            {/* Icons for mobile */}
+            <Link to="/" className="nav__icon-wrapper">
+              <img src={homeIcon} alt="Home" className="profile__icon" />
             </Link>
             <Link to="/profile" className="nav__icon-wrapper">
               <img
@@ -38,18 +49,8 @@ const Header = ({ onLoginClick, onSignOut, isLoggedIn, currentUser }) => {
                 className="profile__icon"
               />
             </Link>
-
-            <button className="nav__logout" onClick={onSignOut}>
-              Logout
-            </button>
             <button className="nav__icon-wrapper" onClick={onSignOut}>
               <img src={logoutIcon} alt="Logout" className="profile__icon" />
-            </button>
-          </>
-        ) : (
-          <>
-            <button className="nav__login" onClick={onLoginClick}>
-              Login
             </button>
           </>
         )}
